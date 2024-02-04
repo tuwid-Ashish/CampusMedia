@@ -1,0 +1,19 @@
+{
+  "name": "campusmedia",
+  "version": "1.0.0",
+  "description": "Linkedin inspired application.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "nodejs-backend",
+    "reactjs-Frontend"
+  ],
+  "author": "Ashish Kumar",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.0.3",
+    "prettier": "^3.2.5"
+  }
+}

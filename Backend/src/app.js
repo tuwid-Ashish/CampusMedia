@@ -4,12 +4,17 @@ import Cors from "cors"
 const app =  express()
 
 app.use(Cors({
-    origin: process.env.CORS_ORIGIN,
-    Credential:true
+        origin: process.env.CORS_ORIGIN,
+        // withCredentials: true,
+        Credential: "include",
 }))
 app.use(express.json({limit:"18kb"}))
 app.use(cookieParser())
 app.use(express.static("public"))
 app.use(express.urlencoded())
 
-export {  app}
+// router import
+import UserRouter from "./routes/user.routes.js"
+app.use("/api/v1/users",UserRouter)
+
+export { app }

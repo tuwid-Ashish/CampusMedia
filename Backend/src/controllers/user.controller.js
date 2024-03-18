@@ -1,5 +1,6 @@
 import { ApiError } from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
+import nodemailer from "nodemailer";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { User } from "../models/user.model.js";
 
@@ -69,6 +70,32 @@ const RegiesterUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, CreateUser, "user created sucessfully"));
 });
 
+const emailer = asyncHandler(async(req, res) => {
+  const { email } = req.body;
+  let verificationCode = Math.floor(100000 + Math.random() * 900000);
+          console.log("this function runs ");
+          const transporter = nodemailer.createTransport({
+            host: 'smtp.ethereal.email',
+            port: 587,
+            auth: {
+              user: 'brant96@ethereal.email',
+              pass: 'bAWytwcxhHUGdeMxWw'
+            }
+          });
+          console.log("the connection is done");
+          const mailtoken = await transporter.sendMail({
+            from: '"Campus Media 😊" <maddison53@ethereal.email>', // sender address
+            to:  `${email}`, // list of receivers
+            subject: "Verification token", // Subject line
+            text: "your 6 digit email verification code is ", // plain text body
+            html: `<b>${verificationCode}<b/>`, // html body
+          });
+          console.log("this function sended mail ")
+          console.log((mailtoken.messageId));
+  mailtoken.messageId ? console.log("email sended sucessfully") : console.log("error occured on sending email");
+    res.status(200).json(new ApiResponse(200, {verificationCode}, "email sended sucessfully"));
+   
+})
 const GetUsers = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   if ([email, password].some((filed) => filed?.trim() === "")) {
@@ -121,4 +148,4 @@ const LogoutUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200,{}, "user logged out sucessfully"));
 });
 export { RegiesterUser, GetUsers,
-LogoutUser };
+LogoutUser,emailer };

@@ -5,8 +5,7 @@ const app =  express()
 
 app.use(Cors({
         origin: process.env.CORS_ORIGIN,
-        // withCredentials: true,
-        Credential: "include",
+        Credential: " true",
 }))
 app.use(express.json({limit:"18kb"}))
 app.use(cookieParser())

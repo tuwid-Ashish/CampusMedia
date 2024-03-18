@@ -1,5 +1,5 @@
 
-function Login() {
+function Loginform() {
   return (
     <div>
       
@@ -7,4 +7,4 @@ function Login() {
   )
 }
 
-export default Login
+export default Loginform

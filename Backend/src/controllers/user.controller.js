@@ -36,6 +36,7 @@ const RegiesterUser = asyncHandler(async (req, res) => {
   const { fullname, username, password, email, Description, Branch, Batch } =
     req.body;
 
+      console.log("my request body is",req.body);
   if (
     [fullname, username, password, email].some((filed) => filed?.trim() === "")
   ) {
@@ -48,6 +49,7 @@ const RegiesterUser = asyncHandler(async (req, res) => {
   if (existedUser) {
     throw new ApiError(409, "user already exist with this username and email");
   }
+  console.log(username);
   const user = await User.create({
     fullname,
     Description,
@@ -70,32 +72,45 @@ const RegiesterUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, CreateUser, "user created sucessfully"));
 });
 
-const emailer = asyncHandler(async(req, res) => {
-  const { email } = req.body;
+const emailer = asyncHandler(async (req, res) => {
+  const { email, Emailtype } = req.body;
   let verificationCode = Math.floor(100000 + Math.random() * 900000);
-          console.log("this function runs ");
-          const transporter = nodemailer.createTransport({
-            host: 'smtp.ethereal.email',
-            port: 587,
-            auth: {
-              user: 'brant96@ethereal.email',
-              pass: 'bAWytwcxhHUGdeMxWw'
-            }
-          });
-          console.log("the connection is done");
-          const mailtoken = await transporter.sendMail({
-            from: '"Campus Media 😊" <maddison53@ethereal.email>', // sender address
-            to:  `${email}`, // list of receivers
-            subject: "Verification token", // Subject line
-            text: "your 6 digit email verification code is ", // plain text body
-            html: `<b>${verificationCode}<b/>`, // html body
-          });
-          console.log("this function sended mail ")
-          console.log((mailtoken.messageId));
-  mailtoken.messageId ? console.log("email sended sucessfully") : console.log("error occured on sending email");
-    res.status(200).json(new ApiResponse(200, {verificationCode}, "email sended sucessfully"));
-   
-})
+  console.log("this function runs ");
+  // const transporter = nodemailer.createTransport({
+  //   host: "sandbox.smtp.mailtrap.io",
+  //   port: 2525,
+  //   auth: {
+  //     user: "114fc960224822",
+  //     pass: "9d020e0db76d4d"
+  //   }
+  // });
+  const transporter = nodemailer.createTransport({
+    host: 'smtp.ethereal.email',
+    port: 587,
+    auth: {
+        user: 'eladio69@ethereal.email',
+        pass: 'KPtr2haJzKgz9rBTyM'
+    }
+});
+  console.log("the connection is done",req.body);
+  const mailtoken = await transporter.sendMail({
+    from: '"Campus Media 😊" <maddison53@ethereal.email>', // sender address
+    to: `${email}`, // list of receivers
+    subject: Emailtype !== "verifyEmail" ? "Password reset Verification token ":"email verification token is", // Subject line
+    text: "your 6 digit email verification code is ", // plain text body
+    html: `<h1>your 6 digit email verification code is </h1> <b>${verificationCode}<b/>`, // html body
+  });
+  console.log("this function sended mail ");
+  console.log(mailtoken.messageId);
+  mailtoken.messageId
+    ? console.log("email sended sucessfully")
+    : console.log("error occured on sending email");
+  res
+    .status(200)
+    .json(
+      new ApiResponse(200, { verificationCode }, "email sended sucessfully")
+    );
+});
 const GetUsers = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   if ([email, password].some((filed) => filed?.trim() === "")) {
@@ -129,7 +144,7 @@ const GetUsers = asyncHandler(async (req, res) => {
         "user logged in sucessfully"
       )
     );
-    console.log("this we get in req", req);
+  console.log("this we get in req", req);
 });
 
 const LogoutUser = asyncHandler(async (req, res) => {
@@ -143,9 +158,8 @@ const LogoutUser = asyncHandler(async (req, res) => {
     { new: true }
   );
   res
-    .clearCookie("refresh_token",options)
-    .clearCookie("access_token",options)
-    .json(new ApiResponse(200,{}, "user logged out sucessfully"));
+    .clearCookie("refresh_token", options)
+    .clearCookie("access_token", options)
+    .json(new ApiResponse(200, {}, "user logged out sucessfully"));
 });
-export { RegiesterUser, GetUsers,
-LogoutUser,emailer };
+export { RegiesterUser, GetUsers, LogoutUser, emailer };

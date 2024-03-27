@@ -4,13 +4,13 @@ import jwt from "jsonwebtoken"
 const Education = new Schema({
   Branch: {
     type: String,
-    required:true,
-    // default: "Computer Science",
+    // required:true,
+    default: "Computer Science",
   },
   Batch: {
     type: String,
-    required:true,
-    // default: "2021",
+    // required:true,
+    default: "2021",
   },
 })
 const userschema = new Schema(
@@ -45,7 +45,8 @@ const userschema = new Schema(
     },
     Description: {
       type: String,
-      required:true
+      default: "I am a student of GNDEC",
+      // required:true
     },
     refreshtoken: {
       type: String,

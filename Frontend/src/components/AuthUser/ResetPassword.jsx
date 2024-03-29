@@ -1,11 +1,20 @@
+import { Button } from "@/components/ui/button"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import React from "react";
 import Input from "../Input.jsx";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { login } from "../../Store/AuthSlice.js";
 import axios from "axios";
+import { Label } from "../ui/label.jsx";
 
 function ResetPassword() {
   const [error, seterror] = useState();
@@ -36,12 +45,21 @@ function ResetPassword() {
     console.log(data);
   };
   return (
-    <form
+      <Card className="w-full max-w-sm">
+      <CardHeader>
+        <CardTitle className="text-2xl">Reset Password</CardTitle>
+        <CardDescription>
+           Create a new and Strong password
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+      <form
       onSubmit={handleSubmit(ResetPassword)}
-      className="flex flex-col justify-center"
+      className="grid gap-4"
     >
-      {" "}
-      <Input
+        <div className="grid gap-2">
+          <Label htmlFor="email">password</Label>
+          <Input
         label="password"
         placeholder="password"
         {...register("password", {
@@ -56,7 +74,10 @@ function ResetPassword() {
         type="password"
         className={"my-2 p-2  border-black border-spacing-2 w-full rounded-lg"}
       />
-      <Input
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="confirm-password">confirm Password</Label>
+          <Input
         label="confirm-password"
         placeholder="confirm"
         {...register("confirm-password", {
@@ -72,13 +93,11 @@ function ResetPassword() {
         className={"my-2 p-2  border-black border-spacing-2 w-full rounded-lg"}
       />
       {error && <p className="text-red-500">{error}</p>}
-      <button
-        type="submit"
-        className="bg-red-500 text-white p-2 rounded-lg w-full"
-      >
-        Reset
-      </button>
-    </form>
+        <Button className="w-full">Reset</Button>
+        </div>
+        </form>
+      </CardContent>   
+    </Card>
   );
 }
 

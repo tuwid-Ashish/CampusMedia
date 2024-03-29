@@ -1,4 +1,6 @@
 import React, { forwardRef, useId } from 'react'
+import { Label } from './ui/label'
+import { Input as Inputcard } from './ui/input'
 
 const Input = forwardRef(function Inputbox(
   {
@@ -11,10 +13,10 @@ const Input = forwardRef(function Inputbox(
 },ref) {
    const  Id = useId()
   return (
-    <div>
-        {lable&& <label className='inline-block mb-1 pl-1' htmlFor={Id}>{lable}</label>  
+    <div className='grid gap-2'>
+        {lable&& <Label htmlFor={Id}>{lable}</ Label>  
     }      
-    <input type={type} maxLength={maxLength} className={`px-3 py-2 rounded-lg bg-white shadow-md text-black outline-none focus:bg-gray-100 duration-200 border border-gray-200  ${className}`} 
+    <Inputcard type={type} maxLength={maxLength} 
     {...prps}
     ref={ref}
     />

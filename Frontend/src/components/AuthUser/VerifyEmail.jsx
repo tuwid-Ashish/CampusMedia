@@ -1,11 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import Input from "../Input";
 import { useDispatch, useSelector } from "react-redux";
 import { login, logout } from "../../Store/AuthSlice";
 import { useForm } from "react-hook-form";
 import CountDown, { zeroPad } from "react-countdown";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
 function VerifyEmail() {
   const [eror, seterror] = useState();
   const [mailedtoken, setToken] = useState(null);
@@ -24,8 +32,8 @@ function VerifyEmail() {
     if (token.length < 6) {
       seterror("token must be of 6 digit");
     }
-    if(!userdata.password){
-      navigate("/reset-password")
+    if (!userdata.password) {
+      navigate("/reset-password");
     }
     axios
       .post("http://localhost:4000/api/v1/users/signup", userdata)
@@ -33,7 +41,7 @@ function VerifyEmail() {
         dispatch(logout());
         console.log(res);
         dispatch(login(res.data));
-        navigate("/")
+        navigate("/");
       })
       .catch((err) => {
         console.log(`error occured on signup time ${err}`);
@@ -43,7 +51,8 @@ function VerifyEmail() {
   const sendmail = async () => {
     axios
       .post("http://localhost:4000/api/v1/users/emailverify", {
-        email: userdata.email, Emailtype : userdata.password ?"verifyEmail":"forgotPassword"
+        email: userdata.email,
+        Emailtype: userdata.password ? "verifyEmail" : "forgotPassword",
       })
       .then((res) => {
         setToken(res.data);
@@ -59,34 +68,41 @@ function VerifyEmail() {
 
   return (
     <div className="flex flex-col justify-center items-center">
-      <form
-        onSubmit={handleSubmit(verifyToken)}
-        className="flex w-full flex-col  justify-around items-center"
-      >
-        <Input
-          maxLength={6}
-          placeholder="enter the token "
-          className="w-[390px]"
-          {...register("token", { required: true })}
-        />
-        {eror ? <div className="text-red-400">{eror}</div> : null}
-        <CountDown
-          daysInHours={true}
-          zeroPadTime={1}
-          zeroPadDays={0}
-          date={Date.now() + 58999}
-        >
-          <a className="font-semibold underline float-end" onClick={sendmail}>
-            Resend code
-          </a>
-        </CountDown>
-        <button
-          type="submit"
-          className="px-4 bg-red-600 text-white  p-2 rounded-lg w-full"
-        >
-          Verify
-        </button>
-      </form>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-3xl">Enter Token</CardTitle>
+          <CardDescription className="text-lg">
+            Enter verification code sent to your email
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form
+            onSubmit={handleSubmit(verifyToken)}
+            className="flex w-full flex-col  justify-around items-center"
+          >
+            <Input
+              maxLength={6}
+              placeholder="enter the token "
+              {...register("token", { required: true })}
+            />
+            {eror ? <div className="text-red-400">{eror}</div> : null}
+            <CountDown
+              daysInHours={true}
+              zeroPadTime={1}
+              zeroPadDays={0}
+              date={Date.now() + 58999}
+            >
+              <a
+                className="font-semibold underline float-end"
+                onClick={sendmail}
+              >
+                Resend code
+              </a>
+            </CountDown>
+            <Button type="submit" className="w-full">Verify</Button>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }

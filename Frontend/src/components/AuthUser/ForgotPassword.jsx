@@ -1,9 +1,17 @@
 import React from 'react'
-import Input from '../Input';
 import { useForm } from "react-hook-form";
 import { useDispatch } from 'react-redux';
 import { login } from '../../Store/AuthSlice';
 import { useNavigate } from 'react-router-dom';
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
 function ForgotPassword() {
     const { register, handleSubmit } = useForm();
     const dispatch = useDispatch();
@@ -15,6 +23,12 @@ function ForgotPassword() {
         navigate(`/verifyEmail`)
     }
   return (
+    <Card>
+        <CardHeader>
+          <CardTitle className="text-3xl">Email Address</CardTitle>
+        </CardHeader>
+        <CardContent>
+      
     <form onSubmit={handleSubmit(changePassword)} className='flex flex-col justify-center'>
        <Input
         label="email"
@@ -32,12 +46,14 @@ function ForgotPassword() {
         })}
         />
         <p className='text-sm p-2'>We’ll send a verification code to this email or phone number if it matches an existing  CampusMedia account.</p>
-        <button
+        <Button
         type="submit"
-        className="bg-red-500 text-white p-2 my-4 rounded-xl w-full">
+        className="  w-full">
           next
-        </button>
+        </Button>
     </form>
+    </CardContent>
+    </Card>
   )
 }
 

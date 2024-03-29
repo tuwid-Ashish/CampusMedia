@@ -1,107 +1,110 @@
-import React from 'react'
-import media from '../../assets/mediaicon.png'
+import React from "react";
+import media from "../../assets/mediaicon.png";
 import { useSelector } from "react-redux";
-import { Link,useNavigate} from 'react-router-dom';
+import { Button } from "@/components/ui/button";
+import { Link, useNavigate } from "react-router-dom";
 // import Profile from '../../appwrite/Profile';
-import { useState } from 'react';
-import { useEffect } from 'react';
-import { Button, Navbar } from 'flowbite-react';
+import { useState } from "react";
+import { useEffect } from "react";
+import { } from "@radix-ui/react-dropdown-menu";
+import { DropdownMenuContent, DropdownMenuShortcut ,DropdownMenu, DropdownMenuGroup, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger  } from "../ui/dropdown-menu";
+import { ChevronRightIcon, RowsIcon, TextAlignMiddleIcon } from "@radix-ui/react-icons";
+
 function Header() {
-  const [profile,setProfile] = useState(null)
-  const userData =  useSelector((state)=> state.Auth.userdata)
-  useEffect(()=>{
-    if(userData){
-    Profile.getProfile(userData.name).then((pro)=>{
-    if(pro){
-      setProfile(pro)
-    }
-  })}
-},[userData]) 
-  console.log("profile image id:", profile);
-  const Status =  useSelector((state)=> state.Auth.status)
- 
+  // const userData = useSelector((state) => state.Auth.userdata);
+  const Status = useSelector((state) => state.Auth.status);
+
   //  console.log(Status);
-   const navigator = useNavigate()
+  const navigator = useNavigate();
   const navItem = [
     {
       name: "Home",
       Url: "/",
-      active: true
+      active: true,
+    },
+
+    {
+      name: "messages",
+      Url: "/messages",
+      active: Status,
+    },
+
+    {
+      name: "Live classes",
+      Url: "/live-classes",
+      active: Status,
+    },
+    {
+      name: "News",
+      Url: "/academic-news",
+      active: true,
     },
     {
       name: "Login",
       Url: "/login",
-      active: !Status
+      active: !Status,
     },
     {
       name: "Signup",
       Url: "/signup",
-      active: !Status
+      active: !Status,
     },
-    {
-      name: "All Posts",
-      Url: "/all-posts",
-      active: Status
-    },
-    
-    {
-      name: "Add Post",
-      Url: "/add-post",
-      active: Status
-    },
-    
-  ]
+  ];
   return (
-    <header className="m-4">
-    <Navbar fluid rounded>
-      <Navbar.Brand href="/">
-        <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">Campus  Media</span>
-        <img src={media} className="mr-3 h-6 sm:h-9" alt="Flowbite React Logo" />
-      </Navbar.Brand>
-      <div className="flex md:order-2">
-        <Button >Get started</Button>
-        <Navbar.Toggle />
-      </div>
-      <Navbar.Collapse>
-        <Navbar.Link href="#" active>
-          Home
-        </Navbar.Link>
-        <Navbar.Link href="#">About</Navbar.Link>
-        <Navbar.Link href="#">Services</Navbar.Link>
-        <Navbar.Link href="#">Pricing</Navbar.Link>
-        <Navbar.Link href="#">Contact</Navbar.Link>
-      </Navbar.Collapse>
-    </Navbar>
-        {/* <nav className ="flex" >
-          <div className='mr-4'>
-          <Link to="/">
-             CampusMedia
-          </Link>      
+    <header className="container m-4">
+      <nav className="p-2">
+        <ul className="flex justify-between items-center">
+          <div className="mx-2 flex">
+            <Link to="/" className="text-2xl font-semibold">CampusMedia</Link>
+            <img src={media} alt="media" className="w-10 h-10" />
           </div>
-          <ul className='flex ml-auto'>
-            {navItem.map((item)=>
-            item.active?(
-              <li key={item.name}>
-                <button
-                onClick={()=> navigator(item.Url)}
-                className='inline-block px-6 py-2 hover:bg-blue-100 rounded-full'
-                >{item.name}</button>
-              </li>
-            ):null
-            )}
-            {Status&& (
-              <li>
-                {/* <ProfileIcon profile={profile}/> */}
-                ProfileIcon
-                {/* <Dialogform/> */}
-              {/* </li>
-            )}
-          </ul>
-        </nav> */} */
-       
-
+            <ul className="md:flex hidden">
+              {navItem.map((item, ) => {
+                if (item.active) {
+                  return (
+                    <li key={item.name} className="mx-2">
+                      <Button onClick={()=>navigator(item.Url)} variant= {`${item.name == "Signup"?"outline":"ghost"}`} className="w-full hover:border-green-500 text-lg">
+                        {item.name}
+                      </Button>
+                    </li>
+                  );
+                }
+              })}
+              {Status  && (
+                <li className="mx-2">
+                  <Link to="/profile">
+                    
+                  </Link>
+                </li>
+              )}
+            </ul>
+            <DropdownMenu > 
+              <DropdownMenuTrigger asChild>
+                < RowsIcon className="mr-4 w-6 h-6 md:hidden block relative"/>
+                {/* <Button className={" focus-visible:outline-black  focus-visible:ring "} variant="ghost" ></Button> */}
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-26">
+                {navItem.map((item) => {
+                if (item.active) {
+                  return (
+                      <li className="list-none " key={item.name}>
+                      <DropdownMenuItem  key={item.name}  onClick={()=>navigator(item.Url)} variant= {`${item.name == "Signup"?"outline":"ghost"}`} >
+                        {item.name}
+                        
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      </li>
+              
+                  );
+                }
+              })}
+          
+              </DropdownMenuContent>
+            </DropdownMenu>
+        </ul>
+      </nav>
     </header>
-  )
+  );
 }
 
-export default Header
+export default Header;

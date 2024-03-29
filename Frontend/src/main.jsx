@@ -12,6 +12,8 @@ import Loginform from './components/AuthUser/Login.jsx'
 import VerifyEmail from './components/AuthUser/VerifyEmail.jsx'
 import ForgotPassword from './components/AuthUser/ForgotPassword.jsx'
 import ResetPassword from './components/AuthUser/ResetPassword.jsx'
+import { DropdownMenuDemo } from './components/Textcomponent.jsx'
+import Loginpage from './pages/Loginpage.jsx'
 
 const router = createBrowserRouter([
   {
@@ -19,12 +21,16 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       { path: '/', element: <Home /> },
-      { path: '/login', element: <Authpage children={<Loginform/>}></Authpage>},
+      { path: '/login', element: <Loginpage/>},
       { path: '/forgot-password', element: <Authpage children={<ForgotPassword/>}></Authpage>},
       { path: '/reset-password', element: <Authpage children={<ResetPassword/>}></Authpage>},
       { path: '/verifyEmail', element: <Authpage children={<VerifyEmail/>}></Authpage>},
-      { path: '/signup', element: <Authpage children={<Signupform/>}></Authpage> },
+      { path: '/signup', element:  <Signupform/>},
     ],
+  },
+  {
+    path: "/test",
+    element: <DropdownMenuDemo />,
   },
     ])
 ReactDOM.createRoot(document.getElementById('root')).render(

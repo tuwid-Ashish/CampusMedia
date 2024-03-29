@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import Input from "./Input";
+import Input from "../Input";
 import { useDispatch, useSelector } from "react-redux";
-import { login, logout } from "../Store/AuthSlice";
+import { login, logout } from "../../Store/AuthSlice";
 import { useForm } from "react-hook-form";
 import CountDown, { zeroPad } from "react-countdown";
 function VerifyEmail() {
@@ -24,7 +24,9 @@ function VerifyEmail() {
     if (token.length < 6) {
       seterror("token must be of 6 digit");
     }
-
+    if(!userdata.password){
+      navigate("/reset-password")
+    }
     axios
       .post("http://localhost:4000/api/v1/users/signup", userdata)
       .then((res) => {
@@ -41,7 +43,7 @@ function VerifyEmail() {
   const sendmail = async () => {
     axios
       .post("http://localhost:4000/api/v1/users/emailverify", {
-        email: userdata.email, Emailtype : "verifyEmail"
+        email: userdata.email, Emailtype : userdata.password ?"verifyEmail":"forgotPassword"
       })
       .then((res) => {
         setToken(res.data);
@@ -71,7 +73,7 @@ function VerifyEmail() {
         <CountDown
           daysInHours={true}
           zeroPadTime={1}
-          zeroPadDays={zeroPad}
+          zeroPadDays={0}
           date={Date.now() + 58999}
         >
           <a className="font-semibold underline float-end" onClick={sendmail}>
@@ -80,7 +82,7 @@ function VerifyEmail() {
         </CountDown>
         <button
           type="submit"
-          className="px-4 bg-red-600 text-white text-2xl rounded-lg w-full"
+          className="px-4 bg-red-600 text-white  p-2 rounded-lg w-full"
         >
           Verify
         </button>

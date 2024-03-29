@@ -1,12 +1,23 @@
 import { Router } from "express";
-import { GetUsers, LogoutUser, RegiesterUser, emailer } from "../controllers/user.controller.js";
+import {
+  GetCurrentUser,
+  LogoutUser,
+  RegiesterUser,
+  UpdatePassword,
+  emailer,
+  forgotPassword,
+  loginUsers,
+} from "../controllers/user.controller.js";
 import { AuthTokenverify } from "../middleware/Auth.middleware.js";
 
-const router = Router()
+const router = Router();
 
-router.route("/signup").post(RegiesterUser)
-router.route("/emailverify").post(emailer)
-router.route("/login").post(GetUsers)
+router.route("/signup").post(RegiesterUser);
+router.route("/emailverify").post(emailer);
+router.route("/login").post(loginUsers);
+router.route("/forgot-password").post(forgotPassword);
 // secure route using Middleware
-router.route("/logout").post(AuthTokenverify,LogoutUser)
-export default router
+router.route("/change-password").post(AuthTokenverify, UpdatePassword);
+router.route("/current-user").get(AuthTokenverify, GetCurrentUser);
+router.route("/logout").post(AuthTokenverify,LogoutUser);
+export default router;

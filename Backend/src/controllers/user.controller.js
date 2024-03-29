@@ -111,7 +111,7 @@ const emailer = asyncHandler(async (req, res) => {
       new ApiResponse(200, { verificationCode }, "email sended sucessfully")
     );
 });
-const GetUsers = asyncHandler(async (req, res) => {
+const loginUsers = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   if ([email, password].some((filed) => filed?.trim() === "")) {
     throw new ApiError(400, "the filed cannot be empty");
@@ -126,7 +126,7 @@ const GetUsers = asyncHandler(async (req, res) => {
   }
   const { access_token, refresh_token } = await GenerateToken(userexist._id);
 
-  const loggedinuser = await User.findById(userexist._id).select(
+  const loggedinUser = await User.findById(userexist._id).select(
     "-password -refreshtoken"
   );
   res
@@ -139,7 +139,7 @@ const GetUsers = asyncHandler(async (req, res) => {
         {
           user: access_token,
           refresh_token,
-          loggedinuser,
+          loggedinUser,
         },
         "user logged in sucessfully"
       )
@@ -162,4 +162,37 @@ const LogoutUser = asyncHandler(async (req, res) => {
     .clearCookie("access_token", options)
     .json(new ApiResponse(200, {}, "user logged out sucessfully"));
 });
-export { RegiesterUser, GetUsers, LogoutUser, emailer };
+
+const UpdatePassword = asyncHandler(async (req, res) => {
+  const { oldPaaword, newPassword } = req.body;
+  const user = await User.findById(req.user?._id);
+  const Passwordchecked = await user.isPasswordCorrect(oldPaaword);
+  if (!Passwordchecked) {
+    throw new ApiError(401, "password is not correct");
+  }
+  user.password = newPassword;
+  await user.save({ validateBeforeSave: false });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, {}, "Password is changed sucessfully"));
+});
+const forgotPassword = asyncHandler(async (req, res) => {
+  const {password, email} = req.body;
+  const user = await User.findOne(email);
+  if (!user) {
+    throw new ApiError(404, "user not found");
+  }
+  user.password = password;
+  await user.save({ validateBeforeSave: false });
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, {}, "Password is Reset sucessfully"));
+})
+   
+const GetCurrentUser = asyncHandler(async (req, res) => {
+  const user = req.user;
+  res.status(200).json(new ApiResponse(200, user, "the details of user"));
+});
+export { RegiesterUser, loginUsers, LogoutUser, emailer ,GetCurrentUser, UpdatePassword,forgotPassword};

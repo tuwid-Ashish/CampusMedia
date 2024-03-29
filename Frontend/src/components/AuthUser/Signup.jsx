@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Input from "./Input";
+import Input from "../Input";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
-import { login } from "../Store/AuthSlice";
+import { login } from "../../Store/AuthSlice";
 function Signupform() {
   const [error, seterror] = useState();
   const navigate = useNavigate()
@@ -14,19 +14,19 @@ function Signupform() {
   const onSignup = async (data) => {
     seterror("");
     console.log(data);
-    dispatch(login(data));
+    dispatch(login(data))
     navigate(`/verifyEmail`)
   };
   return (
     
-      <form onSubmit={handleSubmit(onSignup)} >
-        <div className="flex flex-col">
+      <form className="flex flex-col justify-center" onSubmit={handleSubmit(onSignup)} >
 
         <Input
           label="email"
+          className="w-full"
           type="email"
           placeholder="Email"
-          // className={"my-2 p-2  border-black border-spacing-2 w- rounded-lg"}
+          // className={"my-2 p-2  border-black border-spacing-2 w-full rounded-lg"}
           {...register("email", {
             required: true,
             validate: {
@@ -44,33 +44,33 @@ function Signupform() {
             required: true,
             validate: {
               matchPatern: (value) => {
-                /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) ||
+                /^\w+full([.-]?\w+full)*@\w+full([.-]?\w+full)*(\.\w{full2,3})+$/.test(value) ||
                 "Email address must be validate";
               },
             },
           })}
           type="password"
-          className={"my-2 p-2  border-black border-spacing-2 w- rounded-lg"}
+          className={"my-2 p-2  border-black border-spacing-2 w-full rounded-lg"}
           />
         <Input
           placeholder="username"
           label="username"
           {...register("username", { required: true })}
-          className={"my-2 p-2  border-black border-spacing-2 w- rounded-lg"}
+          className={"my-2 p-2  border-black border-spacing-2 w-full rounded-lg"}
           />
         <Input
           placeholder="fullname"
           label="fullname"
           {...register("fullname", {required:true},)}
-          className={"my-2 p-2  border-black border-spacing-2 w- rounded-lg"}
+          className={"my-2 p-2  border-black border-spacing-2 w-full rounded-lg"}
           />
+          {error && <div className="text-red-500">{error}</div>}
         <button
           type="submit"
-          className="bg-purple-500 text-white p-2 rounded-lg my-2 mx-auto"
+          className="bg-red-500 text-white p-2 rounded-lg w-full"
           >
           Signup
         </button>
-          </div>
       </form>
 
   );

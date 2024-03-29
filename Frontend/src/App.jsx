@@ -1,18 +1,41 @@
 // import { useState } from 'react'
-import Header from './components/Header/Header'
-import Footer from './components/Footer/Footer'
-import { Outlet } from 'react-router-dom'
-import './App.css'
+import Header from "./components/Header/Header";
+import Footer from "./components/Footer/Footer";
+import { Outlet } from "react-router-dom";
+import "./App.css";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { login, logout } from "./Store/AuthSlice";
 
 function App() {
-  return(
+const dispatch = useDispatch();
+const [loading,setloading] = useState(true)
+// const userid = useSelector((state) => state.Auth.user)
+useEffect(() => {
+  axios
+    .get("http://localhost:4000/api/v1/users/current-user")
+    .then((res) => {
+      console.log(res);
+      if(res){
+        dispatch(login(res.data));
+      }
+      else{
+        dispatch(logout())
+      }
+    })
+    .catch((err) => {
+      console.log(`error while fetching user ${err}`);
+    }).finally(()=>setloading(false))
+}, []);
 
-     <div className='w-full'>
-    <Header/>
-    <Outlet/>
-    <Footer/>
-   </div>
-     ) 
+  return ( !loading?
+    <div className="w-full">
+      <Header />
+      <Outlet />
+      <Footer />
+    </div>:null
+  );
 }
 
-export default App
+export default App;

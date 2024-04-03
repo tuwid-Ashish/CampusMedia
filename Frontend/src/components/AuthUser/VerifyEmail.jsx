@@ -93,7 +93,7 @@ function VerifyEmail() {
               date={Date.now() + 58999}
             >
               <a
-                className="font-semibold underline float-end"
+                className="font-semibold underline float-end cursor-pointer"
                 onClick={sendmail}
               >
                 Resend code

@@ -18,7 +18,11 @@ DropdownMenuTrigger,
 import { Avatar, AvatarImage } from '../ui/avatar'
 import { AvatarFallback } from '@radix-ui/react-avatar'
 import { SquareUser } from 'lucide-react'
+import { useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 function ProfileIcon() {
+  const userdata = useSelector((state) => state.Auth.user?.userinfo);
+  const navigator = useNavigate();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -28,7 +32,7 @@ function ProfileIcon() {
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick={()=>navigator(`/user/:${userdata.username}`)}>
             Profile
             <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
           </DropdownMenuItem>

@@ -75,8 +75,8 @@ function AppLayout({ childern }) {
         },
     ];
     return (
-        <div className="w-full py-8 gap-4   flex flex-1  container md:container  m-4 fixed md:relative">
-            <div className="md:w-[25%] w-fit   text-3xl block">
+        <div className="w-full py-8 gap-4   flex flex-1  container sm:container  m-4  md:relative">
+            <div className="md:w-[25%] w-fit h-fit   text-3xl block lg:static sticky  top-20">
                 <div className="p-2 m-4 hidden lg:block w-full">
                     <Card className="w-[90%]">
                         <CardHeader className="relative px-0 pt-0 z-0">
@@ -117,7 +117,7 @@ function AppLayout({ childern }) {
                         </CardFooter>
                     </Card>
                 </div>
-                <nav className="lg:hidden flex flex-col gap-4 min-h-screen shadow-md border-r-2 ">
+                <nav className="lg:hidden flex flex-col gap-4  shadow-md border-r-2 ">
                     {navItem.map((item) =>
                         item.active ? (
                             <NavLink to={item.Url} key={item.name}>

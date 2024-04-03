@@ -39,7 +39,7 @@ function UserProfile() {
                 onClick={()=>navigator(`/user/:${userdata.username}`)}
                 variant="outline"
                 className={
-                    "border size-16  lg:size-32 absolute z-10 left-4 -bottom-0"
+                    "border size-20  lg:size-32 absolute z-10 left-4 -bottom-0"
                 }
             >
                 <AvatarImage
@@ -53,7 +53,7 @@ function UserProfile() {
             <Button variant="outline" className="w-fit self-end" childern={""}>Edit Profile</Button>
             </div>
         </CardHeader>
-        <CardContent className="pt-3 px-10">
+        <CardContent className="pt-3 px-auto">
             <CardTitle className="lg:text-xl text-lg">
                 {userdata.fullname}
             </CardTitle>

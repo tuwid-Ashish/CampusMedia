@@ -14,6 +14,8 @@ import ForgotPassword from './components/AuthUser/ForgotPassword.jsx'
 import ResetPassword from './components/AuthUser/ResetPassword.jsx'
 import { DropdownMenuDemo } from './components/Textcomponent.jsx'
 import Loginpage from './pages/Loginpage.jsx'
+import AuthLayout from './components/AuthLayout.jsx'
+import { ThemeProvider } from './components/theme/theme-provider.jsx'
 
 const router = createBrowserRouter([
   {
@@ -21,11 +23,16 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       { path: '/', element: <Home /> },
-      { path: '/login', element: <Loginpage/>},
+      { path: '/login', element: <AuthLayout authentication={false}>
+        <Loginpage/>
+      </AuthLayout>
+    },
+    { path: '/signup', element: <AuthLayout authentication={false}>
+      <Signupform/>
+    </AuthLayout>},
       { path: '/forgot-password', element: <Authpage children={<ForgotPassword/>}></Authpage>},
       { path: '/reset-password', element: <Authpage children={<ResetPassword/>}></Authpage>},
       { path: '/verifyEmail', element: <Authpage children={<VerifyEmail/>}></Authpage>},
-      { path: '/signup', element:  <Signupform/>},
     ],
   },
   {
@@ -35,8 +42,10 @@ const router = createBrowserRouter([
     ])
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
     <Provider store={store}>
      <RouterProvider router={router} />
     </Provider>
+  </ThemeProvider>
   </React.StrictMode>,
 )

@@ -7,7 +7,7 @@ export const AuthTokenverify = asyncHandler(async (req, res, next) => {
     console.log("i get this access token ",req.cookies);
     console.log("i get this access token ",req.header("Authorization")?.replce("Bearer ", " "));
     const Token =
-      req.cookies?.access_token ||
+    req.cookies?.access_token ||
       req.header("Authorization")?.replce("Bearer ", " ");
 
     if (!Token) {
@@ -18,6 +18,7 @@ export const AuthTokenverify = asyncHandler(async (req, res, next) => {
       Token,
       process.env.JWT_ACCESS_TOKENT_SECRET,
     );
+    console.log("my decodedtoken",decodedtoken);
     const user = await User.findById(decodedtoken?._id).select(
       "-password -refreshtoken",
     );

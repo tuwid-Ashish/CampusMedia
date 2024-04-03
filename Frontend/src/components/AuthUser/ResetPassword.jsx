@@ -40,7 +40,7 @@ function ResetPassword() {
       })
       .catch((err) => {
         console.log("the error on server side ", err);
-        seterror("Invalid email or password");
+        seterror("user is not found with this email address");
       });
     console.log(data);
   };

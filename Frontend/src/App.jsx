@@ -11,14 +11,15 @@ import { login, logout } from "./Store/AuthSlice";
 function App() {
 const dispatch = useDispatch();
 const [loading,setloading] = useState(true)
-// const userid = useSelector((state) => state.Auth.user)
+const userid = useSelector((state) => state.Auth.user)
 useEffect(() => {
   axios
-    .get("http://localhost:4000/api/v1/users/current-user")
+    .get("http://localhost:4000/api/v1/users/current-user",{withCredentials:true})
     .then((res) => {
       console.log(res);
       if(res){
-        dispatch(login(res.data));
+        
+        dispatch(login(res.data.data));
       }
       else{
         dispatch(logout())

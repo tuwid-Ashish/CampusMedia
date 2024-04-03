@@ -6,7 +6,7 @@ import { User } from "../models/user.model.js";
 
 const options = {
   httpOnly: true,
-  secure: true,
+  secure: false,
 };
 const GenerateToken = async (userid) => {
   try {
@@ -69,7 +69,7 @@ const RegiesterUser = asyncHandler(async (req, res) => {
 
   res
     .status(200)
-    .json(new ApiResponse(200, CreateUser, "user created sucessfully"));
+    .json(new ApiResponse(200,{Userinfo: CreateUser}, "user created sucessfully"));
 });
 
 const emailer = asyncHandler(async (req, res) => {
@@ -113,6 +113,7 @@ const emailer = asyncHandler(async (req, res) => {
 });
 const loginUsers = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
+  console.log("this is the body", req.body);
   if ([email, password].some((filed) => filed?.trim() === "")) {
     throw new ApiError(400, "the filed cannot be empty");
   }
@@ -131,20 +132,26 @@ const loginUsers = asyncHandler(async (req, res) => {
   );
   res
     .status(200)
+    // .header({
+    //   "Access-Control-Allow-Credentials": "true",
+    //  "Access-Control-Allow-Origin": "http://localhost:5173",
+    //  "Access-Control-Allow-Origins": "http://localhost:5173",
+    // "Content-Type": "application/json"
+    // })
     .cookie("refresh_token", refresh_token, options)
     .cookie("access_token", access_token, options)
     .json(
       new ApiResponse(
         200,
         {
-          user: access_token,
+           access_token,
           refresh_token,
-          loggedinUser,
+          userinfo:loggedinUser,
         },
         "user logged in sucessfully"
       )
     );
-  console.log("this we get in req", req);
+  console.log("this we get in req", req.cookies);
 });
 
 const LogoutUser = asyncHandler(async (req, res) => {
@@ -179,7 +186,7 @@ const UpdatePassword = asyncHandler(async (req, res) => {
 });
 const forgotPassword = asyncHandler(async (req, res) => {
   const {password, email} = req.body;
-  const user = await User.findOne(email);
+  const user = await User.findOne({email});
   if (!user) {
     throw new ApiError(404, "user not found");
   }
@@ -193,6 +200,6 @@ const forgotPassword = asyncHandler(async (req, res) => {
    
 const GetCurrentUser = asyncHandler(async (req, res) => {
   const user = req.user;
-  res.status(200).json(new ApiResponse(200, user, "the details of user"));
+  res.status(200).json(new ApiResponse(200, {userinfo:user}, "the details of user"));
 });
 export { RegiesterUser, loginUsers, LogoutUser, emailer ,GetCurrentUser, UpdatePassword,forgotPassword};

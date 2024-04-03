@@ -88,7 +88,7 @@ function AppLayout({ childern }) {
                                 className="aspect-[4/2] rounded-lg bg-white"
                             />
                             <Avatar
-                                onClick={()=>navigator(`/user/:${userdata.username}`)}
+                                onClick={()=>navigator(`/user/${userdata.username}`)}
                                 variant="outline"
                                 className={
                                     "border size-14 lg:size-20 absolute z-10 left-1/3 -bottom-0"

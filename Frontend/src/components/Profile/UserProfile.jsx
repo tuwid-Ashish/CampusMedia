@@ -2,6 +2,7 @@ import React from 'react'
 import { useSelector } from 'react-redux';
 import { Button } from "../ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { EditDialog}  from "./EditProfile";
 import {
     MessageSquareTextIcon,
     LucideVideo,
@@ -50,7 +51,7 @@ function UserProfile() {
                 <AvatarFallback>CN</AvatarFallback>
             </Avatar>
             <div className='w-full mx-auto px-4 flex justify-end'>
-            <Button variant="outline" className="w-fit self-end" childern={""}>Edit Profile</Button>
+           <EditDialog/> 
             </div>
         </CardHeader>
         <CardContent className="pt-3 px-auto">

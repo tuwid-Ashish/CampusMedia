@@ -17,7 +17,15 @@ const ExperienceSchema = new Schema({
         type:Date,
         required:true
     },
+    Duration:{
+        type:Date,
+        required:true
+    },
     description:{
+        type:string,
+        required:true,
+    },
+     Location:{
         type:string,
         required:true,
     }

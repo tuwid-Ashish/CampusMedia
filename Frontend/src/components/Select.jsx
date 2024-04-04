@@ -1,26 +1,31 @@
-import React, { useId } from 'react'
+import * as React from "react"
 
-function Select({
-    label,
-    className,
-    options,
-    ...props
-},ref) {
-    const id = useId();
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
+export function Selector({options, label, ...props}) {
   return (
-    <div className='w-full'>
-      {label && <label className='m-1 p-1 inline-block' htmlFor={id}>{label}</label>}
-        <select 
-         id={id}
-         className={`${className}`}
-         ref={ref}
-         {...props}>
-            {options?.map((option) => (
-             <option key={option} value={option}>{option}</option>
-            ))}
-         </select>
-    </div>
+    <Select>
+      <SelectTrigger className="w-full">
+        <SelectValue placeholder={`Select a ${label}`} />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectGroup>
+          <SelectLabel>{label}</SelectLabel>
+          {options.map((option) => (
+            <SelectItem key={option} value={option}>
+              {option}
+            </SelectItem>
+          ))}
+        </SelectGroup>
+      </SelectContent>
+    </Select>
   )
 }
-
-export default Select

@@ -22,6 +22,7 @@ import {
     CardTitle,
 } from "../ui/card";
 import { Separator } from "../ui/separator";
+import { EditExperince } from './Experience';
 function UserProfile() {
     const userdata = useSelector((state) => state.Auth.user?.userinfo);
   return (
@@ -37,7 +38,7 @@ function UserProfile() {
             />
              
             <Avatar
-                onClick={()=>navigator(`/user/:${userdata.username}`)}
+                onClick={()=>navigator(`/user/${userdata.username}`)}
                 variant="outline"
                 className={
                     "border size-20  lg:size-32 absolute z-10 left-4 -bottom-0"
@@ -85,8 +86,13 @@ function UserProfile() {
         </CardContent>
     </Card>
     <Card className="my-2">
-        <CardHeader>
+        <CardHeader >
+            <div className="flex items-cente justify-between">
             <CardTitle>Experience</CardTitle>
+            <div className='flex gap-4'>
+            <EditExperince/>
+            </div>
+            </div>
             <Separator />
         </CardHeader>
         <CardContent>
@@ -96,6 +102,7 @@ function UserProfile() {
     <Card className="my-2">
         <CardHeader>
             <CardTitle>Education</CardTitle>
+
             <Separator />
         </CardHeader>
         <CardContent>

@@ -22,7 +22,7 @@ export function EditDialog() {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button variant="outline" className="w-fit self-end">Edit Profile</Button>
+            <Button variant="outline" className="w-fit self-end">Edit Profile</Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[510px] h-[650px]  overflow-y-scroll  snap-center">
                 <DialogHeader className={""}>

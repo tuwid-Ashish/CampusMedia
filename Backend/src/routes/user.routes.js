@@ -1,8 +1,10 @@
 import { Router } from "express";
 import {
+  AddExperience,
   GetCurrentUser,
   LogoutUser,
   RegiesterUser,
+  UpdateExperience,
   UpdatePassword,
   emailer,
   forgotPassword,
@@ -26,4 +28,6 @@ router.route("/logout").post(AuthTokenverify,LogoutUser);
 router.route("/avatar").patch(AuthTokenverify, upload.single("profileImage"), updateAvatar);
 router.route("/coverImage").patch(AuthTokenverify, upload.single("bannerImage"), updateCoverImage);
 router.route("/update-profile").post(AuthTokenverify, updateAccountdetails);
+router.route("/Add-Exprience").post(AuthTokenverify, AddExperience);
+router.route("/update-Exprience").patch(AuthTokenverify,UpdateExperience)
 export default router;

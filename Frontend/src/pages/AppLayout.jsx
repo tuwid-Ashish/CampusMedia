@@ -80,7 +80,7 @@ function AppLayout({ childern }) {
                     <Card className="w-[90%]">
                         <CardHeader className="relative px-0 pt-0 z-0">
                             <img
-                                src={
+                                src={ userdata.coverImage ||
                                     "https://w7.pngwing.com/pngs/772/580/png-transparent-taobao-textured-grain-business-cool-science-and-technology-background-textured-grain-business.png"
                                 }
                                 alt=""
@@ -94,7 +94,7 @@ function AppLayout({ childern }) {
                                 }
                             >
                                 <AvatarImage
-                                    src={
+                                    src={ userdata.avatar ||
                                         "https://cdn.icon-icons.com/icons2/3054/PNG/512/account_profile_user_icon_190494.png"
                                     }
                                 />
@@ -105,7 +105,7 @@ function AppLayout({ childern }) {
                             <CardTitle className="lg:text-xl text-lg text-center">
                                 {userdata.fullname}
                             </CardTitle>
-                            <CardDescription className="lg:text-lg text-base  m-2">
+                            <CardDescription className="md:text-base text-sm  m-2">
                                 {userdata.Description}
                             </CardDescription>
                             <Separator />

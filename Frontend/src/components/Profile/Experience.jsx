@@ -18,15 +18,52 @@ import { Select } from "../ui/select"
 import { Selector } from "../Select"
 import { DatePicker } from "../Datepicker"
 import { Textarea } from "../ui/textarea"
-export function EditExperince() {
-    const { register, handleSubmit } = useForm();
-    const onSubmit = (data) => {
-        console.log(data);
+import { useSelector, useDispatch } from "react-redux"
+import { useRef, useState } from "react"
+import axios from "axios"
+import { login } from "@/Store/AuthSlice"
+export function EditExperince({ children, key }) {
+    const userdata = useSelector((state) => state.Auth.user);
+    const [error, seterror] = useState("");
+    const dispatch = useDispatch();
+    const myDialog = useRef(null);
+    const { register, handleSubmit } = useForm({
+        defaultValues: {
+            title: userdata.Experience[key]?.title || "",
+            employeetype: userdata.Experience[key]?.employeetype || "",
+            location: userdata.Experience[key]?.location || "",
+            company_name: userdata.Experience[key]?.company_name || "",
+            Duration: userdata.Experience[key]?.Duration || "",
+            description: userdata.Experience[key]?.description || "",
+        }
+    });
+    const onSubmit = async (data) => {
+        if (!key) {
+            await axios.post("http://localhost:4000/api/v1/users/Add-Exprience", data, { withCredentials: true })
+                .then((res) => {
+                    console.log(res.data);
+                    dispatch(login(res.data))
+                })
+                .catch((err) => {
+                    seterror("Experience not added successfully")
+                    console.log(err);
+                });
+            seterror("")    
+        }
+        await axios.patch("http://localhost:4000/api/v1/users/update-Exprience", { ...data, key })
+            .then((res) => {
+                dispatch(login(res.data))
+            })
+            .catch((error) => {
+                seterror("Experience not updated successfully")
+                console.log(error);
+            })
+          myDialog.current.click().seterror("") 
     };
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button variant="outline" className="w-fit self-end">Add</Button>
+                {children}
             </DialogTrigger>
             <DialogContent className="sm:max-w-[560px] h-[550px]  overflow-y-scroll  snap-center">
                 <DialogHeader className={""}>
@@ -75,7 +112,7 @@ export function EditExperince() {
                             placeholder="Lcation"
                         />
                     </div>
-                    
+
                     <div className="my-2 flex flex-col gap-2 items-start">
                         <Label htmlFor="Duration">Duration</Label>
                         <DatePicker
@@ -95,6 +132,9 @@ export function EditExperince() {
                         />
                     </div>
                     <div className="flex justify-end w-full">
+                    <DialogClose  asChild>
+                            <Button ref={myDialog} variant="outline" className="w-fit self-end">Cancel</Button>    
+                        </DialogClose>
                         <Button type="submit">Save changes</Button>
                     </div>
                 </form>

@@ -30,7 +30,7 @@ const userschema = new Schema(
     fullname: {
       type: String,
       required: true,
-      lowercase: true,
+      // lowercase: true,
       trim: true,
     },
     password: {

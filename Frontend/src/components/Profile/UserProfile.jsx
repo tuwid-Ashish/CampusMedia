@@ -24,6 +24,7 @@ import {
 import { Separator } from "../ui/separator";
 import { EditExperince } from './Experience';
 import { useNavigate } from 'react-router-dom';
+import { Pen } from 'lucide-react';
 function UserProfile() {
     const userdata = useSelector((state) => state.Auth.user);
     const navigate = useNavigate();
@@ -91,14 +92,29 @@ function UserProfile() {
         <CardHeader >
             <div className="flex items-cente justify-between">
             <CardTitle>Experience</CardTitle>
-            <div className='flex gap-4'>
-            <EditExperince/>
-            </div>
+            <div className='flex gap-4'><EditExperince children={
+                <Button variant="outline" className="w-fit self-end">Add</Button>
+            }/> </div>
             </div>
             <Separator />
         </CardHeader>
         <CardContent>
-          <div>there gonna be your Experience</div>
+           {userdata.Experience.map((exp,key)=>(
+                <div key={key} className="flex justify-start gap-5">
+                     <div className="flex flex-col gap-1">
+                          <CardTitle className="text-xl text-muted-foreground">{exp.title}</CardTitle>
+                          <CardDescription className="text-lg text-muted-foreground">{exp.Company_name}</CardDescription>
+                          <CardDescription className="text-lg text-muted-foreground">{exp.Lcation}</CardDescription>
+                          <CardDescription className="text-lg text-muted-foreground">{exp.Duration}</CardDescription>
+                            <EditExperince key={key} children={<Pen/>}/>
+                     </div>
+                     <div className="flex flex-col gap-1">
+                          <CardDescription className="text-lg text-muted-foreground">{exp.employeetype}</CardDescription>
+                          <CardDescription className="text-lg text-muted-foreground">{exp.description}</CardDescription>
+                     </div>
+                </div>
+              
+           ))}
         </CardContent>
     </Card>
     <Card className="my-2">
@@ -108,7 +124,11 @@ function UserProfile() {
             <Separator />
         </CardHeader>
         <CardContent>
-          <div>there gonna be your Education</div>
+           <CardTitle className="text-xl text-muted-foreground">Guru Nanak Dev Engineering College</CardTitle>
+           <div className='flex justify-start gap-5'>
+                <span className="text-primary text-lg">{userdata.Education.Branch}</span>
+                <span className="text-primary text-lg">{userdata.Education.Batch}</span>
+           </div>
         </CardContent>
     </Card>
         

@@ -4,6 +4,7 @@ import nodemailer from "nodemailer";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { User } from "../models/user.model.js";
 import { uploadOncloudinary } from "../utils/Cloudinary.js";
+import { Experience } from "../models/Experience.model.js";
 
 const options = {
   httpOnly: true,
@@ -302,10 +303,64 @@ const updateCoverImage = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, user, "the user coverImage has been updated"));
 });
 
+const AddExperience = asyncHandler(async (req, res) => {
+  const { title, employeetype, Company_name, Location, Duration, description } = req.body;
+  if([title, employeetype, Company_name, Location, Duration, description].some((filed) => filed?.trim() === "")){
+    throw new ApiError(400, "the filed cannot be empty");
+  }
+
+  const experience = await Experience.create({
+    owner: req.user._id,
+    title,
+    employeetype,
+    Company_name,
+    Location,
+    Duration,
+    description,
+  });
+
+  const user = await User.findByIdAndUpdate(req.user._id, {
+    $push: { Experience: experience._id },
+  }, {
+    new: true,
+  }).select("-password -refreshtoken");
+  return res
+    .status(200)
+    .json(new ApiResponse(200, user, "the user experience has been updated"));
+});
+
+const UpdateExperience = asyncHandler(async (req, res) => {
+  const { key, title, employeetype, Company_name, Location, Duration, description } = req.body;
+  if([title, employeetype, Company_name, Location, Duration, description].some((filed) => filed?.trim() === "")){
+    throw new ApiError(400, "the filed cannot be empty");
+  }
+
+  const experience = await Experience.findByIdAndUpdate(req.user.Experience[key], {
+    title,
+    employeetype,
+    Company_name,
+    Location,
+    Duration,
+    description,
+  }, {
+    new: true,
+  });
+
+  if (!experience) {
+    throw new ApiError(404, "Experience not found");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, experience, "Experience updated successfully"));
+
+});
 export {
   RegiesterUser,
   loginUsers,
   LogoutUser,
+  UpdateExperience,
+  AddExperience,
   emailer,
   GetCurrentUser,
   UpdatePassword,

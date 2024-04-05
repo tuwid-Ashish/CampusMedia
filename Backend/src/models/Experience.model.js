@@ -6,11 +6,11 @@ const ExperienceSchema = new Schema({
         ref: "User"
     },
     title:{
-        type:string,
+        type:String,
         required:true,
     },
     employeetype:{
-        type:string,
+        type:String,
         required:true
     },
     company_name:{
@@ -22,11 +22,11 @@ const ExperienceSchema = new Schema({
         required:true
     },
     description:{
-        type:string,
+        type:String,
         required:true,
     },
      Location:{
-        type:string,
+        type:String,
         required:true,
     }
 },{timestamps:true})

@@ -23,14 +23,16 @@ import {
 } from "../ui/card";
 import { Separator } from "../ui/separator";
 import { EditExperince } from './Experience';
+import { useNavigate } from 'react-router-dom';
 function UserProfile() {
-    const userdata = useSelector((state) => state.Auth.user?.userinfo);
+    const userdata = useSelector((state) => state.Auth.user);
+    const navigate = useNavigate();
   return (
     <div className="w-full">
     <Card className="border-b-0">
         <CardHeader className="relative  px-0 py-0 z-0 text-left">
             <img
-                src={
+                src={userdata.coverImage ||
                     "https://w7.pngwing.com/pngs/772/580/png-transparent-taobao-textured-grain-business-cool-science-and-technology-background-textured-grain-business.png"
                 }
                 alt=""
@@ -38,14 +40,14 @@ function UserProfile() {
             />
              
             <Avatar
-                onClick={()=>navigator(`/user/${userdata.username}`)}
+                onClick={()=>navigate(`/user/${userdata.username}`)}
                 variant="outline"
                 className={
                     "border size-20  lg:size-32 absolute z-10 left-4 -bottom-0"
                 }
             >
                 <AvatarImage
-                    src={
+                    src={userdata.avatar ||
                         "https://cdn.icon-icons.com/icons2/3054/PNG/512/account_profile_user_icon_190494.png"
                     }
                 />

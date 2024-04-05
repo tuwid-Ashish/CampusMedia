@@ -21,7 +21,7 @@ import { SquareUser } from 'lucide-react'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 function ProfileIcon() {
-  const userdata = useSelector((state) => state.Auth.user?.userinfo);
+  const userdata = useSelector((state) => state.Auth.user);
   const navigator = useNavigate();
   return (
     <DropdownMenu>

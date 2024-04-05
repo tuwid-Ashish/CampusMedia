@@ -3,6 +3,7 @@ import ApiResponse from "../utils/ApiResponse.js";
 import nodemailer from "nodemailer";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { User } from "../models/user.model.js";
+import { uploadOncloudinary } from "../utils/Cloudinary.js";
 
 const options = {
   httpOnly: true,
@@ -36,7 +37,7 @@ const RegiesterUser = asyncHandler(async (req, res) => {
   const { fullname, username, password, email, Description, Branch, Batch } =
     req.body;
 
-      console.log("my request body is",req.body);
+  console.log("my request body is", req.body);
   if (
     [fullname, username, password, email].some((filed) => filed?.trim() === "")
   ) {
@@ -69,7 +70,7 @@ const RegiesterUser = asyncHandler(async (req, res) => {
 
   res
     .status(200)
-    .json(new ApiResponse(200,{Userinfo: CreateUser}, "user created sucessfully"));
+    .json(new ApiResponse(200, CreateUser , "user created sucessfully"));
 });
 
 const emailer = asyncHandler(async (req, res) => {
@@ -88,15 +89,15 @@ const emailer = asyncHandler(async (req, res) => {
     host: 'smtp.ethereal.email',
     port: 587,
     auth: {
-        user: 'eladio69@ethereal.email',
-        pass: 'KPtr2haJzKgz9rBTyM'
+      user: 'eladio69@ethereal.email',
+      pass: 'KPtr2haJzKgz9rBTyM'
     }
-});
-  console.log("the connection is done",req.body);
+  });
+  console.log("the connection is done", req.body);
   const mailtoken = await transporter.sendMail({
     from: '"Campus Media 😊" <maddison53@ethereal.email>', // sender address
     to: `${email}`, // list of receivers
-    subject: Emailtype !== "verifyEmail" ? "Password reset Verification token ":"email verification token is", // Subject line
+    subject: Emailtype !== "verifyEmail" ? "Password reset Verification token " : "email verification token is", // Subject line
     text: "your 6 digit email verification code is ", // plain text body
     html: `<h1>your 6 digit email verification code is </h1> <b>${verificationCode}<b/>`, // html body
   });
@@ -144,9 +145,9 @@ const loginUsers = asyncHandler(async (req, res) => {
       new ApiResponse(
         200,
         {
-           access_token,
+          access_token,
           refresh_token,
-          userinfo:loggedinUser,
+          ...loggedinUser._doc,
         },
         "user logged in sucessfully"
       )
@@ -185,8 +186,8 @@ const UpdatePassword = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, {}, "Password is changed sucessfully"));
 });
 const forgotPassword = asyncHandler(async (req, res) => {
-  const {password, email} = req.body;
-  const user = await User.findOne({email});
+  const { password, email } = req.body;
+  const user = await User.findOne({ email });
   if (!user) {
     throw new ApiError(404, "user not found");
   }
@@ -197,9 +198,120 @@ const forgotPassword = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, {}, "Password is Reset sucessfully"));
 })
-   
+
 const GetCurrentUser = asyncHandler(async (req, res) => {
   const user = req.user;
-  res.status(200).json(new ApiResponse(200, {userinfo:user}, "the details of user"));
+  res.status(200).json(new ApiResponse(200,  user  , "the details of user"));
 });
-export { RegiesterUser, loginUsers, LogoutUser, emailer ,GetCurrentUser, UpdatePassword,forgotPassword};
+
+const GetUser = asyncHandler(async (req, res) => {
+  const { username } = req.body
+  if (!username) {
+    throw new ApiError(404, "invalid username ji")
+  }
+  const user = await User.findOne({ username }).select("-password -refreshtoken")
+
+  if (!user) {
+    throw new ApiError(404, "user not found")
+  }
+  res
+    .status(200)
+    .json(new ApiResponse(200, user, "User fetch sucessfully"));
+})
+
+const updateAccountdetails = asyncHandler(async (req, res) => {
+  const { fullname, description, website, Branch, Batch } = req.body;
+    console.log("this is the body for update account");
+  if (!req.body) {
+    throw new ApiError(401, "the filed cannot be empty");
+  }
+
+  const user = await User.findByIdAndUpdate(
+    req.user?._id,
+    {
+      $set: {
+        fullname,
+        Description: description,
+        website,
+        Education: {  Branch, Batch },
+
+      },
+    },
+    {
+      new: true,
+    },
+  ).select("-password");
+  console.log("this is the user", user);
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        user,
+        "the user fullname and email has been updated",
+      ),
+    );
+});
+
+const updateAvatar = asyncHandler(async (req, res) => {
+  console.log("my request body",req.body,req.file);
+  const AvatarLocalPath = req.file.path;
+
+  if (!AvatarLocalPath) {
+    throw new ApiError(401, "the avatar image is missing");
+  }
+  const avatoruploaded = await uploadOncloudinary(AvatarLocalPath);
+  if (!avatoruploaded.url) {
+    throw new ApiError(401, "Error while uploading avatar on cloudinary");
+  }
+  const user = await User.findByIdAndUpdate(
+    req.user?._id,
+    {
+      $set: { avatar: avatoruploaded?.url },
+    },
+    {
+      new: true,
+    },
+  ).select("-password");
+  return res
+    .status(200)
+    .json(new ApiResponse(200, user, "the user avatar has been updated"));
+});
+const updateCoverImage = asyncHandler(async (req, res) => {
+  // console.log("this is my req file banner",req);
+  const CoverImageLocalPath = req.file.path;
+
+  if (!CoverImageLocalPath) {
+    throw new ApiError(401, "the coverimageimage is missing");
+  }
+  const CoverImageuploaded = await uploadOncloudinary(CoverImageLocalPath);
+  if (!CoverImageuploaded.url) {
+    throw new ApiError(401, "Error while uploading CoverImage on cloudinary");
+  }
+  const user = await User.findByIdAndUpdate(
+    req.user?._id,
+    {
+      $set: { coverImage: CoverImageuploaded?.url },
+    },
+    {
+      new: true,
+    },
+  ).select("-password");
+  return res
+    .status(200)
+    .json(new ApiResponse(200, user, "the user coverImage has been updated"));
+});
+
+export {
+  RegiesterUser,
+  loginUsers,
+  LogoutUser,
+  emailer,
+  GetCurrentUser,
+  UpdatePassword,
+  forgotPassword,
+  updateAccountdetails,
+  GetUser,
+  updateAvatar,
+  updateCoverImage,
+};

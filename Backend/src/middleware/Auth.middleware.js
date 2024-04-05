@@ -4,8 +4,8 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import jwt from "jsonwebtoken";
 export const AuthTokenverify = asyncHandler(async (req, res, next) => {
   try {
-    console.log("i get this access token ",req.cookies);
-    console.log("i get this access token ",req.header("Authorization")?.replce("Bearer ", " "));
+    // console.log("i get this access token ",req.cookies);
+    // console.log("i get this access token ",req.header("Authorization")?.replce("Bearer ", " "));
     const Token =
     req.cookies?.access_token ||
       req.header("Authorization")?.replce("Bearer ", " ");
@@ -18,7 +18,7 @@ export const AuthTokenverify = asyncHandler(async (req, res, next) => {
       Token,
       process.env.JWT_ACCESS_TOKENT_SECRET,
     );
-    console.log("my decodedtoken",decodedtoken);
+    // console.log("my decodedtoken",decodedtoken);
     const user = await User.findById(decodedtoken?._id).select(
       "-password -refreshtoken",
     );

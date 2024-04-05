@@ -43,6 +43,9 @@ const userschema = new Schema(
     coverImage: {
       type: String, // cloudinary url
     },
+    website: {
+      type: String,
+    },
     Description: {
       type: String,
       default: "I am a student of GNDEC",

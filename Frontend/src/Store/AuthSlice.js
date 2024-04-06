@@ -1,8 +1,10 @@
 import {createSlice} from '@reduxjs/toolkit';
+import { add } from 'date-fns';
 
 const initialState = {
     status: false,
     user: null,
+    Exprience: [],
 }
 
 const AuthSlice = createSlice({
@@ -16,6 +18,9 @@ const AuthSlice = createSlice({
         logout: (state) => {
             state.status = false;
             state.user = null;
+        },
+        addExprience: (state, action) => {
+            state.Exprience = action.payload;
         }
     }
 })

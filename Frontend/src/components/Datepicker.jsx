@@ -11,14 +11,14 @@ import {
   PopoverTrigger
 } from "@/components/ui/popover"
 
-export function DatePicker({ className }) {
+export const DatePicker = React.forwardRef(({ className },ref)=> {
   const [date, setDate] = React.useState({
     from: new Date(2022, 0, 20),
     to: addDays(new Date(2022, 0, 20), 20)
   })
 
   return (
-    <div className={cn("grid gap-2", className)}>
+    <div className={cn("grid gap-2", className)} ref={ref}>
       <Popover>
         <PopoverTrigger asChild>
           <Button
@@ -57,4 +57,4 @@ export function DatePicker({ className }) {
       </Popover>
     </div>
   )
-}
+})

@@ -355,6 +355,19 @@ const UpdateExperience = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, experience, "Experience updated successfully"));
 
 });
+ const GetExpreince = asyncHandler(async(req,res)=>{
+        const {experienceArray } = req.body;
+        if(experienceArray.length === 0){
+            throw new ApiError(400,"the experience array is missing");
+        }
+       
+       const arr =  experienceArray.map(async (exp,index)=>{
+           await Experience.find({_id:experienceArray});
+        //  console.log("this is the experience id",exp);
+        })
+
+      res.status(200).json(new ApiResponse(200,arr,"the experience has been fetched"));
+ })
 export {
   RegiesterUser,
   loginUsers,

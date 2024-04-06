@@ -1,6 +1,16 @@
 import { ImageUp } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
-import { Button } from "../ui/button"
+import * as React from "react"
+import { CalendarIcon } from "@radix-ui/react-icons"
+import { add, addDays, format, set } from "date-fns"
+import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger
+} from "@/components/ui/popover"
+import { cn } from "@/lib/utils" 
 import { CardHeader } from "../ui/card"
 import {
     Dialog,
@@ -18,9 +28,9 @@ import { useForm } from "react-hook-form"
 import { DatePicker } from "../Datepicker"
 import { Textarea } from "../ui/textarea"
 import { useSelector, useDispatch } from "react-redux"
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import axios from "axios"
-import { login } from "@/Store/AuthSlice"
+import { login, addExprience } from "@/Store/AuthSlice"
 import { Selector } from "../Select"
 export function EditExperince({ children, key }) {
     const userdata = useSelector((state) => state.Auth.user);
@@ -29,41 +39,60 @@ export function EditExperince({ children, key }) {
     const myDialog = useRef(null);
     const datePickerRef = useRef(null);
     const selectorRef = useRef(null);
-  
+    const [date, setDate] = React.useState({
+        from: new Date(2023, 0, 20),
+        to: addDays(new Date(2023, 0, 20), 20)
+    })
+
     const { register, handleSubmit } = useForm({
         defaultValues: {
             title: userdata.Experience[key]?.title || "Junior Developer",
             employeetype: userdata.Experience[key]?.employeetype || "Full Time",
             Location: userdata.Experience[key]?.location || "ludhiana,Punjab,India",
             Company_name: userdata.Experience[key]?.company_name || "Mestro Tech",
-            Duration: userdata.Experience[key]?.Duration || "4 months",
+            Duration: userdata.Experience[key]?.Duration || "",
             description: userdata.Experience[key]?.description || "worked as a junior developer in the company and learned a lot of new things.",
         }
     });
+
+    useEffect(() => {
+
+    }, [])
     const onSubmit = async (data) => {
         console.log(data);
         console.log(datePickerRef.current, selectorRef.current);
-        // if (!key) {
-        //     await axios.post("http://localhost:4000/api/v1/users/Add-Exprience", data, { withCredentials: true })
-        //         .then((res) => {
-        //             console.log(res.data);
-        //             dispatch(login(res.data))
-        //         })
-        //         .catch((err) => {
-        //             seterror("Experience not added successfully")
-        //             console.log(err);
-        //         });
-        //     seterror("")    
-        // }
-        // await axios.patch("http://localhost:4000/api/v1/users/update-Exprience", { ...data, key })
-        //     .then((res) => {
-        //         dispatch(login(res.data))
-        //     })
-        //     .catch((error) => {
-        //         seterror("Experience not updated successfully")
-        //         console.log(error);
-        //     })
-        //   myDialog.current.click().seterror("") 
+           if(!key){
+             await axios.post("http://localhost:4000/api/v1/users/Add-Exprience", data, { withCredentials: true })
+                .then(async (res) => {
+                    console.log(res.data);
+                    dispatch(login(res.data))
+                    await axios.get("http://localhost:4000/api/v1/users/get-exprience")
+                    .then((res) => {
+                          dispatch(addExprience(res.data) ) 
+                    }).catch((err) => {
+                        console.log(err);
+                        seterror("Experience data not fetched successfully in redux store")
+                    })
+                })
+                .catch((err) => {
+                    seterror("Experience not added successfully")
+                    console.log(err);
+                });
+            seterror("")  
+
+            myDialog.current.click()  
+        }
+
+        await axios.patch("http://localhost:4000/api/v1/users/update-Exprience", { ...data, key })
+            .then((res) => {
+                dispatch(login(res.data))
+            })
+            .catch((error) => {
+                seterror("Experience not updated successfully")
+                console.log(error);
+            })
+
+     myDialog.current.click().seterror("") 
     };
     return (
         <Dialog>
@@ -121,13 +150,37 @@ export function EditExperince({ children, key }) {
 
                     <div className="my-2 flex flex-col gap-2 items-start">
                         <Label htmlFor="Duration">Duration</Label>
-                        <DatePicker
-                            ref={datePickerRef}
-                            {...register("Duration")}
-                            id="Duration"
-                            type="text"
-                            placeholder="Duration"
-                        />
+                        <div className={cn("grid gap-2")}>
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <Input
+                                        type="text"
+                                        readOnly
+                                        {...register("Duration")}
+                                        className={cn(
+                                            "w-[300px] justify-start text-left font-normal",
+                                            !date && "text-muted-foreground"
+                                        )}
+                                        value={
+                                            date
+                                                ? `${format(date.from, "LLL dd, y")} - ${format(date.to, "LLL dd, y")}`
+                                                : "Select dates"
+                                        }
+                                    />
+                                </PopoverTrigger>
+                                <PopoverContent className="w-auto p-0" align="start">
+                                    <Calendar
+                                        initialFocus
+                                        mode="range"
+                                        defaultMonth={date?.from}
+                                        selected={date}
+                                        onSelect={setDate}
+                                        numberOfMonths={2}
+                                    />
+                                </PopoverContent>
+                            </Popover>
+                        </div>
+
                     </div>
                     <div className="my-2 flex flex-col gap-2 items-start">
                         <Label htmlFor="description">Description</Label>
@@ -139,8 +192,8 @@ export function EditExperince({ children, key }) {
                         />
                     </div>
                     <div className="flex justify-end w-full">
-                    <DialogClose  asChild>
-                            <Button ref={myDialog} variant="outline" className="w-fit self-end">Cancel</Button>    
+                        <DialogClose asChild>
+                            <Button ref={myDialog} variant="outline" className="w-fit self-end">Cancel</Button>
                         </DialogClose>
                         <Button type="submit">Save changes</Button>
                     </div>

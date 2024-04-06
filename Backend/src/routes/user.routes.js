@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   AddExperience,
   GetCurrentUser,
+  GetExpreince,
   LogoutUser,
   RegiesterUser,
   UpdateExperience,
@@ -30,4 +31,5 @@ router.route("/coverImage").patch(AuthTokenverify, upload.single("bannerImage"),
 router.route("/update-profile").post(AuthTokenverify, updateAccountdetails);
 router.route("/Add-Exprience").post(AuthTokenverify, AddExperience);
 router.route("/update-Exprience").patch(AuthTokenverify,UpdateExperience)
+router.route("/get-exprience").get(AuthTokenverify,GetExpreince)
 export default router;

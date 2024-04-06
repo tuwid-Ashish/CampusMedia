@@ -82,7 +82,7 @@ function Header() {
     },
   ];
   return (
-    <header className="container mr-0 m-4 sm:m-4 sticky top-0 z-10 bg-background">
+    <header className="container mr-0 m-4 sm:my-4 sm:mx-auto sticky top-0 z-10 bg-background">
       <nav className="sm:p-2 pr-0 ">
         <ul className="flex justify-between items-center">
           <div className="mx-2 flex">

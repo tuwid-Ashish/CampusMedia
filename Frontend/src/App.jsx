@@ -18,8 +18,13 @@ useEffect(() => {
     .then((res) => {
       console.log(res);
       if(res){
-        
-        dispatch(login(res.data.data));
+         dispatch(login(res.data.data));
+        if(userid.Experience.length > 0){
+           axios.get("http://localhost:4000/api/v1/users/get-exprience")
+          .then((res) => {
+                dispatch(addExprience(res.data) ) 
+          })
+        }
       }
       else{
         dispatch(logout())

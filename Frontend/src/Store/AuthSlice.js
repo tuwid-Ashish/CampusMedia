@@ -4,7 +4,7 @@ import { add } from 'date-fns';
 const initialState = {
     status: false,
     user: null,
-    Exprience: [],
+    Exprience:null,
 }
 
 const AuthSlice = createSlice({
@@ -25,5 +25,5 @@ const AuthSlice = createSlice({
     }
 })
 
-export const {login, logout} = AuthSlice.actions;
+export const {login, logout, addExprience} = AuthSlice.actions;
 export default AuthSlice.reducer;

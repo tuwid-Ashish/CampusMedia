@@ -14,11 +14,11 @@ const ExperienceSchema = new Schema({
         required:true
     },
     company_name:{
-        type:Date,
+        type:String,
         required:true
     },
     Duration:{
-        type:Date,
+        type:String,
         required:true
     },
     description:{

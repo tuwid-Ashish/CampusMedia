@@ -313,7 +313,7 @@ const AddExperience = asyncHandler(async (req, res) => {
     owner: req.user._id,
     title,
     employeetype,
-    Company_name,
+    company_name:Company_name,
     Location,
     Duration,
     description,
@@ -380,6 +380,7 @@ export {
   forgotPassword,
   updateAccountdetails,
   GetUser,
+  GetExpreince,
   updateAvatar,
   updateCoverImage,
 };

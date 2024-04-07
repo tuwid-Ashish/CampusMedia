@@ -118,15 +118,15 @@ export function EditDialog() {
                             />
                         </div>
                         <div className="relative">
-                            <Button className="absolute z-10 top-1/3 left-6 bg-transparent text-white hover:bg-transparent hover:drop-shadow-lg w-fit   rounded-full " size="icon">
+                            <Button className="absolute z-10 md:top-1/3 top-5 left-3 md:left-6 bg-transparent text-white hover:bg-transparent hover:drop-shadow-lg w-fit   rounded-full " size="icon">
                                 <label htmlFor="" className="cursor-pointer relative"><ImageUp className="size-7 text-sky-300" /></label>
-                                <input type="file" className="opacity-0 relative z-[2] size-8 -left-1/2 " {...register("profileImage")} />
+                                <input type="file" className="opacity-0 relative z-[2]   md:size-8 size-10 -left-1/2 " {...register("profileImage")} />
                             </Button>
                             <Avatar
                                 onClick={() => navigator(`/user/${userdata.username}`)}
                                 variant="outline"
                                 className={
-                                    "border size-14 lg:size-20 "
+                                    "border size-16 lg:size-20 "
                                 }
                             >
                                 <AvatarImage

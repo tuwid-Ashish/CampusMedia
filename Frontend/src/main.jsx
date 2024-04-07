@@ -21,6 +21,7 @@ import AppLayout from './pages/AppLayout.jsx'
 import Notifications from './components/Notifications.jsx'
 import LiveClasses from './components/live classes/LiveClasses.jsx'
 import UserProfile from './components/Profile/UserProfile.jsx'
+import Search from './components/Search/Search.jsx'
 const router = createBrowserRouter([
   {
     path: '/',
@@ -45,6 +46,12 @@ const router = createBrowserRouter([
         path: "/user/:profile",
         element: <AuthLayout authentication>
           <AppLayout childern={<UserProfile />} />
+        </AuthLayout>
+      },
+      {
+        path: "/Search",
+        element: <AuthLayout authentication>
+          <AppLayout childern={<Search />} />
         </AuthLayout>
       },
       {

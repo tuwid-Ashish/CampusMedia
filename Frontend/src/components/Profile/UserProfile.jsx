@@ -25,8 +25,13 @@ import { Separator } from "../ui/separator";
 import { EditExperince } from './Experience';
 import { useNavigate } from 'react-router-dom';
 import { Pen } from 'lucide-react';
+import { addExperience } from '@/Store/AuthSlice';
+import { useEffect } from 'react';
+import axios from 'axios';
 function UserProfile() {
     const userdata = useSelector((state) => state.Auth.user);
+    const Experience = useSelector((state) => state.Auth.Experience);
+    console.log("fetching exprience array", Experience);
     const navigate = useNavigate();
   return (
     <div className="w-full">
@@ -99,20 +104,23 @@ function UserProfile() {
             <Separator />
         </CardHeader>
         <CardContent>
-           {userdata.Experience.map((exp,key)=>(
-                <div key={key} className="flex justify-start gap-5">
-                     <div className="flex flex-col gap-1">
-                          <CardTitle className="text-xl text-muted-foreground">{exp.title}</CardTitle>
-                          <CardDescription className="text-lg text-muted-foreground">{exp.Company_name}</CardDescription>
+           {Experience?.map((exp,key)=>(
+            <>
+                <div key={key} className="flex justify-between gap-5 m-2">
+                     <div className="flex flex-col justify-between">
+                          <CardTitle className="text-xl ">{exp.title}</CardTitle>
+                          <CardDescription className="text-lg text-primary">{exp.company_name}</CardDescription>
                           <CardDescription className="text-lg text-muted-foreground">{exp.Lcation}</CardDescription>
-                          <CardDescription className="text-lg text-muted-foreground">{exp.Duration}</CardDescription>
-                            <EditExperince key={key} children={<Pen/>}/>
-                     </div>
-                     <div className="flex flex-col gap-1">
+                          <CardDescription className="text-base text-muted-foreground">{exp.Duration}</CardDescription>
                           <CardDescription className="text-lg text-muted-foreground">{exp.employeetype}</CardDescription>
                           <CardDescription className="text-lg text-muted-foreground">{exp.description}</CardDescription>
                      </div>
+                     <div className="flex flex-col gap-1">
+                            <EditExperince expId={key} children={<Pen/>}/>
+                     </div>
                 </div>
+                     <Separator />
+            </>
               
            ))}
         </CardContent>
@@ -126,8 +134,8 @@ function UserProfile() {
         <CardContent>
            <CardTitle className="text-xl text-muted-foreground">Guru Nanak Dev Engineering College</CardTitle>
            <div className='flex justify-start gap-5'>
-                <span className="text-primary text-lg">{userdata.Education.Branch}</span>
-                <span className="text-primary text-lg">{userdata.Education.Batch}</span>
+                <span className="text-primary text-lg">{userdata.Education?.Branch}</span>
+                <span className="text-primary text-lg">{userdata.Education?.Batch}</span>
            </div>
         </CardContent>
     </Card>

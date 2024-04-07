@@ -10,8 +10,7 @@ import {
     PopoverContent,
     PopoverTrigger
 } from "@/components/ui/popover"
-import { cn } from "@/lib/utils" 
-import { CardHeader } from "../ui/card"
+import { cn } from "@/lib/utils"
 import {
     Dialog,
     DialogContent,
@@ -30,11 +29,14 @@ import { Textarea } from "../ui/textarea"
 import { useSelector, useDispatch } from "react-redux"
 import { useEffect, useRef, useState } from "react"
 import axios from "axios"
-import { login, addExprience } from "@/Store/AuthSlice"
+import { useNavigate } from "react-router-dom"
+import { login, addExperience } from "@/Store/AuthSlice"
 import { Selector } from "../Select"
-export function EditExperince({ children, key }) {
+export function EditExperince({ children, expId }) {
     const userdata = useSelector((state) => state.Auth.user);
+    const  Exprience  = useSelector((state)=>state.Auth.Experience )
     const [error, seterror] = useState("");
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const myDialog = useRef(null);
     const datePickerRef = useRef(null);
@@ -43,47 +45,49 @@ export function EditExperince({ children, key }) {
         from: new Date(2023, 0, 20),
         to: addDays(new Date(2023, 0, 20), 20)
     })
-
+    console.log("fetching exprience array in editexprence", Exprience);
     const { register, handleSubmit } = useForm({
         defaultValues: {
-            title: userdata.Experience[key]?.title || "Junior Developer",
-            employeetype: userdata.Experience[key]?.employeetype || "Full Time",
-            Location: userdata.Experience[key]?.location || "ludhiana,Punjab,India",
-            Company_name: userdata.Experience[key]?.company_name || "Mestro Tech",
-            Duration: userdata.Experience[key]?.Duration || "",
-            description: userdata.Experience[key]?.description || "worked as a junior developer in the company and learned a lot of new things.",
+            title: Exprience?.at(expId).title || "",
+            employeetype: Exprience?.at(expId).employeetype || "",
+            Location:Exprience?.at(expId).location || "",
+            Company_name: Exprience?.at(expId).company_name || "",
+            Duration: Exprience?.at(expId).Duration || "",
+            description:Exprience?.at(expId).description || "worked as a junior developer in the company and learned a lot of new things.",
         }
     });
 
-    useEffect(() => {
-
-    }, [])
+     useEffect(()=>{
+        console.log(Exprience?.at(expId).title|| "there nothing to show");
+     })
     const onSubmit = async (data) => {
         console.log(data);
         console.log(datePickerRef.current, selectorRef.current);
-           if(!key){
-             await axios.post("http://localhost:4000/api/v1/users/Add-Exprience", data, { withCredentials: true })
+        if (!expId) {
+            console.log("expId not found");
+            await axios.post("http://localhost:4000/api/v1/users/Add-Exprience", data, { withCredentials: true })
                 .then(async (res) => {
                     console.log(res.data);
                     dispatch(login(res.data))
                     await axios.get("http://localhost:4000/api/v1/users/get-exprience")
-                    .then((res) => {
-                          dispatch(addExprience(res.data) ) 
-                    }).catch((err) => {
-                        console.log(err);
-                        seterror("Experience data not fetched successfully in redux store")
-                    })
+                        .then((res) => {
+                            dispatch(addExperience(res.data))
+                        }).catch((err) => {
+                            console.log(err);
+                            seterror("Experience data not fetched successfully in redux store")
+                        })
                 })
                 .catch((err) => {
                     seterror("Experience not added successfully")
                     console.log(err);
                 });
-            seterror("")  
+            seterror("")
 
-            myDialog.current.click()  
+            myDialog.current.click()
+            navigate(`/user/${userdata.username}`)
         }
 
-        await axios.patch("http://localhost:4000/api/v1/users/update-Exprience", { ...data, key })
+        await axios.patch("http://localhost:4000/api/v1/users/update-Exprience", { ...data, expId })
             .then((res) => {
                 dispatch(login(res.data))
             })
@@ -92,7 +96,7 @@ export function EditExperince({ children, key }) {
                 console.log(error);
             })
 
-     myDialog.current.click().seterror("") 
+        myDialog.current.click().seterror("")
     };
     return (
         <Dialog>
@@ -162,9 +166,13 @@ export function EditExperince({ children, key }) {
                                             !date && "text-muted-foreground"
                                         )}
                                         value={
-                                            date
-                                                ? `${format(date.from, "LLL dd, y")} - ${format(date.to, "LLL dd, y")}`
-                                                : "Select dates"
+                                            `${date?.from ? (
+                                                date.to ?
+                                                    ` ${format(date.from, "LLL dd, y")} - ${format(date.to, "LLL dd, y")}` :
+                                                    `${format(date.from, "LLL dd, y")}`
+
+                                            ) : "Pick a date"
+                                            }`
                                         }
                                     />
                                 </PopoverTrigger>

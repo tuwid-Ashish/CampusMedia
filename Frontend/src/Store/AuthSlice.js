@@ -1,10 +1,9 @@
 import {createSlice} from '@reduxjs/toolkit';
-import { add } from 'date-fns';
 
 const initialState = {
     status: false,
+    Experience:null,
     user: null,
-    Exprience:null,
 }
 
 const AuthSlice = createSlice({
@@ -19,11 +18,11 @@ const AuthSlice = createSlice({
             state.status = false;
             state.user = null;
         },
-        addExprience: (state, action) => {
-            state.Exprience = action.payload;
-        }
+         addExperience: (state, action) => {
+            state.Experience = action.payload;
+    },
     }
 })
 
-export const {login, logout, addExprience} = AuthSlice.actions;
+export const {login, logout, addExperience} = AuthSlice.actions;
 export default AuthSlice.reducer;

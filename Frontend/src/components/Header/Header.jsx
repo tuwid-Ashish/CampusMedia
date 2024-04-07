@@ -37,9 +37,9 @@ import {
 } from "../ui/drawer";
 
 function Header() {
-  // const userData = useSelector((state) => state.Auth.userdata);
+  const userData = useSelector((state) => state.Auth.userdata);
   const Status = useSelector((state) => state.Auth.status);
-
+  console.log("fetching exprience array",userData?.email);
   //  console.log(Status);
   const navigator = useNavigate();
   const navItem = [

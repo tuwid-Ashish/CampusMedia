@@ -133,12 +133,20 @@ function AppLayout({ childern }) {
                         ) : null
                     )}
                     <Button
+                     onClick={()=>navigator(`/user/${userdata.username}`)}
                         variant="ghost"
                         className="md:w-full flex items-center justify-start gap-4 p-4 rounded-2xl "
                     >
                         <SquareUser />
                         <h1 className="text-lg hidden md:block">profile</h1>
                     </Button>
+                    <Button
+                        onClick={()=>navigator(`/search`)}
+                        variant="ghost"
+                        className="md:w-full   md:hidden flex items-center justify-start gap-4 p-4 rounded-2xl "> 
+                        <Search/>
+                        <h1 className="text-lg hidden md:block">Search</h1>
+                        </Button>
                 </nav>
             </div>
             <div className="md:w-[50%] w-full  text-3xl relative">
@@ -154,7 +162,7 @@ function AppLayout({ childern }) {
                 <div className="">
                     <Card>
                         <CardHeader>
-                            <CardTitle className="">Top News</CardTitle>
+                            <CardTitle className="md:text-2xl">Top News</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <div className="flex justify-center items-center "></div>

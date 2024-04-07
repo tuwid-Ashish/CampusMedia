@@ -4,7 +4,7 @@ import nodemailer from "nodemailer";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { User } from "../models/user.model.js";
 import { uploadOncloudinary } from "../utils/Cloudinary.js";
-import { Experience } from "../models/Experience.model.js";
+import { Experience as expSchema } from "../models/Experience.model.js";
 
 const options = {
   httpOnly: true,
@@ -309,7 +309,7 @@ const AddExperience = asyncHandler(async (req, res) => {
     throw new ApiError(400, "the filed cannot be empty");
   }
 
-  const experience = await Experience.create({
+  const experience = await  expSchema.create({
     owner: req.user._id,
     title,
     employeetype,
@@ -335,7 +335,7 @@ const UpdateExperience = asyncHandler(async (req, res) => {
     throw new ApiError(400, "the filed cannot be empty");
   }
 
-  const experience = await Experience.findByIdAndUpdate(req.user.Experience[key], {
+  const experience = await  expSchema.findByIdAndUpdate(req.user.Experience[key], {
     title,
     employeetype,
     Company_name,
@@ -356,16 +356,14 @@ const UpdateExperience = asyncHandler(async (req, res) => {
 
 });
  const GetExpreince = asyncHandler(async(req,res)=>{
-        const {experienceArray } = req.body;
-        if(experienceArray.length === 0){
+        const { Experience  } = req.user;
+        console.log(Experience.length);
+        if(Experience.length === 0){
             throw new ApiError(400,"the experience array is missing");
         }
-       
-       const arr =  experienceArray.map(async (exp,index)=>{
-           await Experience.find({_id:experienceArray});
-        //  console.log("this is the experience id",exp);
-        })
-
+        
+        const arr = await Promise.all(Experience.map((exp) => expSchema.findById(exp)));
+      console.log("array should work",arr);
       res.status(200).json(new ApiResponse(200,arr,"the experience has been fetched"));
  })
 export {

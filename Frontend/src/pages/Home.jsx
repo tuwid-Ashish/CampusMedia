@@ -6,10 +6,8 @@ import {
   MessageSquareTextIcon,
   LucideVideo,
   Newspaper,
-  HomeIcon,
-  BellDot,
+  HomeIcon,  
   Bell,
-  SquareUser,
 } from "lucide-react";
 import {
   Card,
@@ -26,6 +24,7 @@ import { useSelector } from "react-redux";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import ProfileIcon from "@/components/Header/ProfileIcon";
 import AppLayout from "./AppLayout";
+import Feed from "@/components/post/Feed";
 
 function Home() {
   const status = useSelector((state) => state.Auth.status);
@@ -100,6 +99,6 @@ function Home() {
     );
   }
   return (
-    <AppLayout/>
+    <AppLayout childern={<Feed/>}/>
     )}
 export default Home;

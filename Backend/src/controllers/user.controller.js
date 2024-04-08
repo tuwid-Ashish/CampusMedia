@@ -71,7 +71,7 @@ const RegiesterUser = asyncHandler(async (req, res) => {
 
   res
     .status(200)
-    .json(new ApiResponse(200, CreateUser , "user created sucessfully"));
+    .json(new ApiResponse(200, CreateUser, "user created sucessfully"));
 });
 
 const emailer = asyncHandler(async (req, res) => {
@@ -202,7 +202,7 @@ const forgotPassword = asyncHandler(async (req, res) => {
 
 const GetCurrentUser = asyncHandler(async (req, res) => {
   const user = req.user;
-  res.status(200).json(new ApiResponse(200,  user  , "the details of user"));
+  res.status(200).json(new ApiResponse(200, user, "the details of user"));
 });
 
 const GetUser = asyncHandler(async (req, res) => {
@@ -222,7 +222,7 @@ const GetUser = asyncHandler(async (req, res) => {
 
 const updateAccountdetails = asyncHandler(async (req, res) => {
   const { fullname, description, website, Branch, Batch } = req.body;
-    console.log("this is the body for update account");
+  console.log("this is the body for update account");
   if (!req.body) {
     throw new ApiError(401, "the filed cannot be empty");
   }
@@ -234,7 +234,7 @@ const updateAccountdetails = asyncHandler(async (req, res) => {
         fullname,
         Description: description,
         website,
-        Education: {  Branch, Batch },
+        Education: { Branch, Batch },
 
       },
     },
@@ -255,7 +255,7 @@ const updateAccountdetails = asyncHandler(async (req, res) => {
 });
 
 const updateAvatar = asyncHandler(async (req, res) => {
-  console.log("my request body",req.body,req.file);
+  console.log("my request body", req.body, req.file);
   const AvatarLocalPath = req.file.path;
 
   if (!AvatarLocalPath) {
@@ -305,15 +305,15 @@ const updateCoverImage = asyncHandler(async (req, res) => {
 
 const AddExperience = asyncHandler(async (req, res) => {
   const { title, employeetype, Company_name, Location, Duration, description } = req.body;
-  if([title, employeetype, Company_name, Location, Duration, description].some((filed) => filed?.trim() === "")){
+  if ([title, employeetype, Company_name, Location, Duration, description].some((filed) => filed?.trim() === "")) {
     throw new ApiError(400, "the filed cannot be empty");
   }
 
-  const experience = await  expSchema.create({
+  const experience = await expSchema.create({
     owner: req.user._id,
     title,
     employeetype,
-    company_name:Company_name,
+    company_name: Company_name,
     Location,
     Duration,
     description,
@@ -331,11 +331,11 @@ const AddExperience = asyncHandler(async (req, res) => {
 
 const UpdateExperience = asyncHandler(async (req, res) => {
   const { key, title, employeetype, Company_name, Location, Duration, description } = req.body;
-  if([title, employeetype, Company_name, Location, Duration, description].some((filed) => filed?.trim() === "")){
+  if ([title, employeetype, Company_name, Location, Duration, description].some((filed) => filed?.trim() === "")) {
     throw new ApiError(400, "the filed cannot be empty");
   }
 
-  const experience = await  expSchema.findByIdAndUpdate(req.user.Experience[key], {
+  const experience = await expSchema.findByIdAndUpdate(req.user.Experience[key], {
     title,
     employeetype,
     Company_name,
@@ -355,17 +355,80 @@ const UpdateExperience = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, experience, "Experience updated successfully"));
 
 });
- const GetExpreince = asyncHandler(async(req,res)=>{
-        const { Experience  } = req.user;
-        console.log(Experience.length);
-        if(Experience.length === 0){
-            throw new ApiError(400,"the experience array is missing");
+const GetExpreince = asyncHandler(async (req, res) => {
+  const { Experience } = req.user;
+  console.log(Experience.length);
+  if (Experience.length === 0) {
+    throw new ApiError(400, "the experience array is missing");
+  }
+
+  const arr = await Promise.all(Experience.map((exp) => expSchema.findById(exp)));
+  console.log("array should work", arr);
+  res.status(200).json(new ApiResponse(200, arr, "the experience has been fetched"));
+})
+
+const getUserChannelProfile = asyncHandler(async (req, res) => {
+  const { username } = req.params;
+
+  if (!username?.trim()) {
+    throw new ApiError(401, "username is missing");
+  }
+  const UserPage = await User.aggregate([
+    {
+      $match: {
+        username: username?.toLowerCase()
+      }
+    },
+    {
+      $lookup: {
+        from: "connections",
+        localField: "_id",
+        foreignField: "following",
+        as: "followers",
+      }
+    },
+    {
+      $lookup: {
+        from: "connections",
+        localField: "_id",
+        foreignField: "follower",
+        as: "followingTo",
+      },
+    },
+    {
+      $addFields: {
+        followersCount: {
+          $size : "$followers"
+        },
+        followingToCount:{
+          $size:"$followingTo"
         }
-        
-        const arr = await Promise.all(Experience.map((exp) => expSchema.findById(exp)));
-      console.log("array should work",arr);
-      res.status(200).json(new ApiResponse(200,arr,"the experience has been fetched"));
- })
+      },
+      isfollwed:{
+        $cond:{
+          if:{$in: [req.user?._id,"$connections.follower"]},
+          then:true,
+          else:false,
+        }
+      }
+    },{
+      $project:{
+        fullname:1,
+        username:1,
+        email:1,
+        avatar:1,
+        coverImage:1,
+        website:1,
+        Description:1,
+        Education:1,
+        Experience:1,
+        followersCount:1,
+        followingToCount:1,
+        isfollwed:1,
+      }
+    }
+  ])
+});
 export {
   RegiesterUser,
   loginUsers,
@@ -381,4 +444,5 @@ export {
   GetExpreince,
   updateAvatar,
   updateCoverImage,
+  getUserChannelProfile,
 };

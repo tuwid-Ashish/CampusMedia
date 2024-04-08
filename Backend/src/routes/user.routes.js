@@ -25,7 +25,7 @@ router.route("/reset-password").post(forgotPassword);
 // secure route using Middleware
 router.route("/change-password").post(AuthTokenverify, UpdatePassword);
 router.route("/current-user").get(AuthTokenverify, GetCurrentUser);
-router.route("/logout").post(AuthTokenverify,LogoutUser);
+router.route("/logout").get(AuthTokenverify,LogoutUser);
 router.route("/avatar").patch(AuthTokenverify, upload.single("profileImage"), updateAvatar);
 router.route("/coverImage").patch(AuthTokenverify, upload.single("bannerImage"), updateCoverImage);
 router.route("/update-profile").post(AuthTokenverify, updateAccountdetails);

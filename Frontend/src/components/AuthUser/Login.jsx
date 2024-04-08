@@ -2,9 +2,9 @@
 import { useState } from "react";
 import { Input } from "../ui/input";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch,useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
-import { login } from "../../Store/AuthSlice.js";
+import { addExperience, login } from "../../Store/AuthSlice.js";
 import { Button } from "../ui/button";
 import axios from "axios";
 import { Label } from "../ui/label";
@@ -15,39 +15,22 @@ function Loginform() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { register, handleSubmit } = useForm();
-
+  const userdata = useSelector((state) => state.Auth.user);
   const loginUser = async (data) => {
-    // console.log("my json data is",JSON.stringify(data));
-    // console.log("my json data is parse",JSON.parse(data));
-    // seterror("");
-    //  await fetch({
-    //   url: "http://localhost:4000/api/v1/users/login",
-    //   method: "POST",
-    //   credentials: "include",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(data),
-    // }).then((res)=>res.json()).then((res) => {
-    //     console.log(res);
-    //     dispatch(login(res.data.data));
-    //     navigate("/");
-    //   })
-    //   .catch((err) => {
-    //     console.log("the error on server side ", err);
-    //     seterror("Invalid email or password");
-    //   });
     axios
       .post(
         "http://localhost:4000/api/v1/users/login",
-        data,
-        {  withCredentials:true,
-          
-        }
-      )
-      .then((res) => {
+        data, { withCredentials: true })
+       .then((res) => {
         console.log(res);
         dispatch(login(res.data.data));
+          axios.get("http://localhost:4000/api/v1/users/get-exprience", { withCredentials: true }).then((res) => {
+            console.log(res.data);
+            dispatch(addExperience(res.data.data));
+          }).catch((err) => {
+            console.log(err);
+          });
+        
         navigate("/");
       })
       .catch((err) => {

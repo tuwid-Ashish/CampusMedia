@@ -18,11 +18,24 @@ DropdownMenuTrigger,
 import { Avatar, AvatarImage } from '../ui/avatar'
 import { AvatarFallback } from '@radix-ui/react-avatar'
 import { SquareUser } from 'lucide-react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
+import { logout } from '@/Store/AuthSlice'
 function ProfileIcon() {
   const userdata = useSelector((state) => state.Auth.user);
   const navigator = useNavigate();
+  const dispatch = useDispatch();
+  const logoutapp = () => {
+    console.log("logout");
+    axios.get("http://localhost:4000/api/v1/users/logout",{withCredentials:true}).then((res) => {
+      console.log(res);
+      dispatch(logout());
+      navigator("/login");
+    }).catch((err) => {
+      console.log(err);
+    });
+  }
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -73,7 +86,7 @@ function ProfileIcon() {
         <DropdownMenuItem>Support</DropdownMenuItem>
         <DropdownMenuItem disabled>API</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={logoutapp} >
           Log out
           <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
         </DropdownMenuItem>

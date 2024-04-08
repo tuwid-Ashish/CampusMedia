@@ -60,7 +60,7 @@ function UserProfile() {
                 <AvatarFallback>CN</AvatarFallback>
             </Avatar>
             <div className='w-full mx-auto px-4 flex justify-end'>
-           <EditDialog/> 
+          { <EditDialog/> }
             </div>
         </CardHeader>
         <CardContent className="pt-3 px-auto">

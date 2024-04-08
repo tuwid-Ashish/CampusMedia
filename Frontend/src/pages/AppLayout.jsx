@@ -25,7 +25,7 @@ import { Label } from "../components/ui/label";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-function AppLayout({ childern }) {
+function AppLayout({ childern}) {
     const status = useSelector((state) => state.Auth.status);
     const userdata = useSelector((state) => state.Auth.user);
     const navigator = useNavigate();

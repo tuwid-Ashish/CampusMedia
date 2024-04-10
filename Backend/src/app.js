@@ -23,7 +23,9 @@ app.use(express.urlencoded())
 // router import
 import UserRouter from "./routes/user.routes.js"
 import PostRouter from "./routes/post.routes.js"
+import ConnectionRouter from "./routes/connection.routes.js"
 app.use("/api/v1/users",UserRouter)
 app.use("/api/v1/posts",PostRouter)
+app.use("/api/v1/connections",ConnectionRouter)
 
 export { app }

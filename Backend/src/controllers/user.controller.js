@@ -5,6 +5,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { User } from "../models/user.model.js";
 import { uploadOncloudinary } from "../utils/Cloudinary.js";
 import { Experience as expSchema } from "../models/Experience.model.js";
+import mongoose, { isValidObjectId } from "mongoose"
 
 const options = {
   httpOnly: true,
@@ -201,8 +202,82 @@ const forgotPassword = asyncHandler(async (req, res) => {
 })
 
 const GetCurrentUser = asyncHandler(async (req, res) => {
-  const user = req.user;
-  res.status(200).json(new ApiResponse(200, user, "the details of user"));
+  // const user = req.user;
+  const user = await User.aggregate([
+    {
+      $match:{_id:new mongoose.Types.ObjectId(req.user._id)}
+    },
+    {
+      $lookup: {
+        from: "connections",
+        localField: "_id",
+        foreignField: "following",
+        as: "followers",
+      }
+    },
+    {
+      $lookup: {
+        from: "connections",
+        localField: "_id",
+        foreignField: "follower",
+        as: "followingTo",
+      },
+    },
+    {
+      $lookup:{
+        from:"experiences",
+        localField:"Experience",
+        foreignField:"_id",
+        as:"Experience",
+        pipeline:[
+          {
+            $project:{
+              title:1,
+              employeetype:1,
+              company_name:1,
+              Location:1,
+              Duration:1,
+              description:1,
+            }
+          }
+        ]
+      }
+    },
+    {
+      $addFields: {
+        followersCount: {
+          $size : "$followers"
+        },
+        followingToCount:{
+          $size:"$followingTo"
+        },
+        isfollwed:{
+          $cond:{
+            if:{$in: [req.user?._id,"$followers.follower"]},
+            then:true,
+            else:false,
+          }
+        }
+      },
+    },
+    {
+      $project:{
+        fullname:1,
+        username:1,
+        email:1,
+        avatar:1,
+        coverImage:1,
+        website:1,
+        Description:1,
+        Education:1,
+        Experience:1,
+        followersCount:1,
+        followingToCount:1,
+        isfollwed:1,
+      }
+    }
+  ])
+  res.status(200).json(new ApiResponse(200, user[0], "the details of user"));
 });
 
 const GetUser = asyncHandler(async (req, res) => {
@@ -368,6 +443,7 @@ const GetExpreince = asyncHandler(async (req, res) => {
 })
 
 const getUserChannelProfile = asyncHandler(async (req, res) => {
+  console.log(req.params);
   const { username } = req.params;
 
   if (!username?.trim()) {
@@ -376,7 +452,7 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
   const UserPage = await User.aggregate([
     {
       $match: {
-        username: username?.toLowerCase()
+        username: username.toLowerCase()
       }
     },
     {
@@ -396,22 +472,43 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
       },
     },
     {
+      $lookup:{
+        from:"experiences",
+        localField:"Experience",
+        foreignField:"_id",
+        as:"Experience",
+        pipeline:[
+          {
+            $project:{
+              title:1,
+              employeetype:1,
+              company_name:1,
+              Location:1,
+              Duration:1,
+              description:1,
+            }
+          }
+        ]
+      }
+    },
+    {
       $addFields: {
         followersCount: {
           $size : "$followers"
         },
         followingToCount:{
           $size:"$followingTo"
+        },
+        isfollwed:{
+          $cond:{
+            if:{$in: [req.user?._id,"$followers.follower"]},
+            then:true,
+            else:false,
+          }
         }
       },
-      isfollwed:{
-        $cond:{
-          if:{$in: [req.user?._id,"$connections.follower"]},
-          then:true,
-          else:false,
-        }
-      }
-    },{
+    },
+    {
       $project:{
         fullname:1,
         username:1,
@@ -431,7 +528,7 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
 
   res.
     status(200)
-    .json(new ApiResponse(200, UserPage, "the user page has been fetched"));
+    .json(new ApiResponse(200, UserPage[0], "the user page has been fetched"));
 });
 export {
   RegiesterUser,

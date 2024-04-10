@@ -23,22 +23,45 @@ import {
 } from "../ui/card";
 import { Separator } from "../ui/separator";
 import { EditExperince } from './Experience';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Pen } from 'lucide-react';
 import { addExperience } from '@/Store/AuthSlice';
 import { useEffect } from 'react';
 import axios from 'axios';
 function UserProfile() {
     const userdata = useSelector((state) => state.Auth.user);
-    const Experience = useSelector((state) => state.Auth.Experience);
-    console.log("fetching exprience array", Experience);
-    const navigate = useNavigate();
+     const location = useLocation().pathname.replace("/user/","");
+     const [profile,setprofile] = React.useState({})
+     const navigate = useNavigate();
+
+     useEffect(() => {
+        console.log("this is my user data",userdata.username === location);
+        if(userdata.username === location) return setprofile(userdata)
+        axios.get(`http://localhost:4000/api/v1/users/${location}`, { withCredentials: true })  
+        .then((res)=>{
+            console.log(res.data)
+            setprofile(res.data.data)
+        })
+        .catch((err)=>console.log(err))
+    },[location])
+
+   const Togglesub = () => {
+        axios.post(`http://localhost:4000/api/v1/connections/${profile._id}`,{}, {withCredentials:true})
+        .then((res)=>{console.log(res)
+            setprofile((profile)=>({...profile,isfollwed:!profile.isfollwed}))
+            // profile.isfollwed = !profile.isfollwed
+        })
+        .catch((err)=>{
+            console.log(err)
+        })
+    }
+  
   return (
     <div className="w-full">
     <Card className="border-b-0">
         <CardHeader className="relative  px-0 py-0 z-0 text-left">
             <img
-                src={userdata.coverImage ||
+                src={profile.coverImage||
                     "https://w7.pngwing.com/pngs/772/580/png-transparent-taobao-textured-grain-business-cool-science-and-technology-background-textured-grain-business.png"
                 }
                 alt=""
@@ -53,7 +76,7 @@ function UserProfile() {
                 }
             >
                 <AvatarImage
-                    src={userdata.avatar ||
+                    src={profile.avatar ||
                         "https://cdn.icon-icons.com/icons2/3054/PNG/512/account_profile_user_icon_190494.png"
                     }
                 />
@@ -65,17 +88,17 @@ function UserProfile() {
         </CardHeader>
         <CardContent className="pt-3 px-auto">
             <CardTitle className="lg:text-xl text-lg">
-                {userdata.fullname}
+                {profile.fullname}
             </CardTitle>
             <CardDescription className="lg:text-lg text-lg ">
-                {userdata.Description}
+                {profile.Description}
             </CardDescription>
-            <span className='text-base text-muted-foreground'>{`${""} connections`}</span>
-            <div className='flex justify-start py-2 gap-4'>
-                <Button variant="" className="w-fit self-end rounded-full" childern={""}>Connections</Button>
+            <span className='text-base text-muted-foreground'>{`${profile?.followersCount} connections`}</span>
+         { profile._id !== userdata._id? <div className='flex justify-start py-2 gap-4'>
+                <Button variant="" className="w-fit self-end rounded-full" onClick={Togglesub} childern={""}>{profile.isfollwed?"Connected":"Connections"}</Button>
                 <Button variant="outline" size="lg" className="w-fit self-end rounded-full hover:border-primary " childern={""}>messages</Button>
                 <Button variant="outline" size="lg" className="w-fit self-end rounded-full hover:border-primary" childern={""}>more</Button>
-            </div>
+            </div>:null}
         </CardContent>
     </Card>
     <Card className="my-2">
@@ -104,7 +127,7 @@ function UserProfile() {
             <Separator />
         </CardHeader>
         <CardContent>
-           {Experience?.map((exp,key)=>(
+           {profile.Experience?.map((exp,key)=>(
             <>
                 <div key={key} className="flex justify-between gap-5 m-2">
                      <div className="flex flex-col justify-between">

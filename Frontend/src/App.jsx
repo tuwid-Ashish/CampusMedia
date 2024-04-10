@@ -26,17 +26,18 @@ useEffect(() => {
         else{
           dispatch(logout())
         }
-      }).then(()=>{
-        axios.get("http://localhost:4000/api/v1/users/get-exprience",{withCredentials:true})
-         .then((res) => {
-          console.log("fetching exprience array in get-exp",res.data.data);
-               dispatch(addExperience(res.data.data) ) 
-         }).catch((err) => {
-           console.log("there is issue in getting exprencence array ",err);
-         
-         })
-       
       })
+      // .then(()=>{
+      //   axios.get("http://localhost:4000/api/v1/users/get-exprience",{withCredentials:true})
+      //    .then((res) => {
+      //     console.log("fetching exprience array in get-exp",res.data.data);
+      //          dispatch(addExperience(res.data.data) ) 
+      //    }).catch((err) => {
+      //      console.log("there is issue in getting exprencence array ",err);
+         
+      //    })
+       
+      // })
       .catch((err) => {
         console.log(`error while fetching user ${err}`);
     }).finally(()=>setloading(false))

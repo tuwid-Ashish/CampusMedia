@@ -9,6 +9,7 @@ import {
   UpdatePassword,
   emailer,
   forgotPassword,
+  getUserChannelProfile,
   loginUsers,
   updateAccountdetails,
   updateAvatar,
@@ -32,4 +33,5 @@ router.route("/update-profile").post(AuthTokenverify, updateAccountdetails);
 router.route("/Add-Exprience").post(AuthTokenverify, AddExperience);
 router.route("/update-Exprience").patch(AuthTokenverify,UpdateExperience)
 router.route("/get-exprience").get(AuthTokenverify,GetExpreince)
+router.route("/:username").get(AuthTokenverify,getUserChannelProfile)
 export default router;

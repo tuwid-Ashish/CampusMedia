@@ -428,6 +428,10 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
       }
     }
   ])
+
+  res.
+    status(200)
+    .json(new ApiResponse(200, UserPage, "the user page has been fetched"));
 });
 export {
   RegiesterUser,

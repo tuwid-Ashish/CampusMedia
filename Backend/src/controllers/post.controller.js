@@ -1,58 +1,59 @@
-import { promises } from "nodemailer/lib/xoauth2"
-import Post from "../models/post.model"
-import { ApiError } from "../utils/ApiError"
-import ApiResponse from "../utils/ApiResponse"
-import { uploadOncloudinary } from "../utils/Cloudinary"
+import Post from "../models/post.model.js"
+import { ApiError } from "../utils/ApiError.js"
+import ApiResponse from "../utils/ApiResponse.js"
+import { uploadOncloudinary } from "../utils/Cloudinary.js"
+import { asyncHandler } from "../utils/asyncHandler.js";
 
-const getAllPosts = asyncHandler(async (req, res) => {
-  const { page = 1, limit = 10, query, sortBy, sortType, userId } = req.query;
-  const sortOptions = {};
+const getPostsfeed = asyncHandler(async (req, res) => {
+        
+  // const { page = 1, limit = 10, query, sortBy, sortType, userId } = req.query;
+  // const sortOptions = {};
 
-  if (sortBy) {
-    sortOptions[sortBy] = sortType == "desc" ? -1 : 1;
-  }
+  // if (sortBy) {
+  //   sortOptions[sortBy] = sortType == "desc" ? -1 : 1;
+  // }
 
-  let basequery = {};
+  // let basequery = {};
 
-  if (query) {
-    basequery.$or = [
-      { title: { $regex: query, $options: "i" } },
-      { description: { $regex: query, $options: "i" } },
-    ];
-  }
+  // if (query) {
+  //   basequery.$or = [
+  //     { title: { $regex: query, $options: "i" } },
+  //     { description: { $regex: query, $options: "i" } },
+  //   ];
+  // }
 
-  try {
-    const result = await Video.aggregate([
-      {
-        $match: {
-          ...basequery,
-          owner: new mongoose.Types.ObjectId(userId),
-        },
-      },
-      {
-        $sort: sortOptions,
-      },
-      {
-        $skip: (page - 1) * limit,
-      },
-      {
-        $limit: parseInt(limit),
-      },
-    ]);
+  // try {
+  //   const result = await Video.aggregate([
+  //     {
+  //       $match: {
+  //         ...basequery,
+  //         owner: new mongoose.Types.ObjectId(userId),
+  //       },
+  //     },
+  //     {
+  //       $sort: sortOptions,
+  //     },
+  //     {
+  //       $skip: (page - 1) * limit,
+  //     },
+  //     {
+  //       $limit: parseInt(limit),
+  //     },
+  //   ]);
 
-    console.log(result);
+  //   console.log(result);
 
-    return res.status(200).json(new ApiResponse(200, { result }, "Success"));
-  } catch (e) {
-    throw new ApiError(500, e.message);
-  }
+  //   return res.status(200).json(new ApiResponse(200, { result }, "Success"));
+  // } catch (e) {
+  //   throw new ApiError(500, e.message);
+  // }
 });
 
     //TODO: get all videos based on query, sort, pagination
 
 const publishAPost = asyncHandler(async (req, res) => {
     const { title, description, video, image, } = req.body
-    if (!title && !description) {
+    if (!description) {
         throw new ApiError(404, 'All fields are required')
     }
     const postImages = req.files?.images.map((img)=> img?.path)
@@ -67,13 +68,14 @@ const publishAPost = asyncHandler(async (req, res) => {
         return result.url
     })  
 
-    const cloudinaryimages = Promise.all(imagesuploaded)
+    const cloudinaryimages = await Promise.all(imagesuploaded)
+    console.log(cloudinaryimages);
     const newPost = await Post.create({
         author: req.user._id,
         title,
         content: description,
         video,
-        image:[...cloudinaryimages],
+        image:cloudinaryimages,
     })
 
     if (!newPost) {
@@ -162,7 +164,7 @@ const togglePublishStatus = asyncHandler(async (req, res) => {
 })
 
 export {
-    getAllPosts,
+    // getAllPosts,
     publishAPost,
     getPostById,
     updatePost,

@@ -26,12 +26,19 @@ function AddPost({ children }) {
   const myDialog = useRef(null);
   const [error, seterror] = useState("");
   const userdata = useSelector((state) => state.Auth.user);
+  const formdata = new FormData();
   const onSubmit = async (data) => {
+    formdata.delete("images")
+    formdata.delete("description")
       if(!data){
         seterror("Please fill the form")
       }
-      console.log(data)
-      await axios.post("http://localhost:4000/api/v1/create-posts", data, { withCredentials: true }).then((res) => {
+      if(data.image){
+        formdata.append("images", data.image[0]);
+        formdata.append("description", data.description);
+      }
+      console.log(data.description)
+      await axios.post("http://localhost:4000/api/v1/posts/create-post", formdata, { withCredentials: true }).then((res) => {
           console.log(res.data);
           
       })

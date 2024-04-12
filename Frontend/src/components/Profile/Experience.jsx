@@ -29,7 +29,7 @@ import { useSelector, useDispatch } from "react-redux"
 import { useEffect, useRef, useState } from "react"
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
-import { login, addExperience } from "@/Store/AuthSlice"
+import { login} from "@/Store/AuthSlice"
 import { Selector } from "../Select"
 export function EditExperince({ children, expId }) {
     const userdata = useSelector((state) => state.Auth.user);
@@ -47,18 +47,14 @@ export function EditExperince({ children, expId }) {
     console.log("fetching exprience array in editexprence", Exprience);
     const { register, handleSubmit } = useForm({
         defaultValues: {
-            title: Exprience?.at(expId).title || "",
-            employeetype: Exprience?.at(expId).employeetype || "",
-            Location:Exprience?.at(expId).location || "",
-            Company_name: Exprience?.at(expId).company_name || "",
-            Duration: Exprience?.at(expId).Duration || "",
-            description:Exprience?.at(expId).description || "worked as a junior developer in the company and learned a lot of new things.",
+            title: userdata.Experience?.at(expId).title || "",
+            employeetype: userdata.Experience?.at(expId).employeetype || "",
+            Location: userdata.Experience?.at(expId).Location || "",
+            Company_name: userdata.Experience?.at(expId).company_name || "",
+            Duration: userdata.Experience?.at(expId).Duration || "",
+            description: userdata.Experience?.at(expId).description || "worked as a junior developer in the company and learned a lot of new things.",
         }
     });
-
-     useEffect(()=>{
-        console.log(Exprience?.at(expId).title|| "there nothing to show");
-     })
     const onSubmit = async (data) => {
         console.log(data);
         console.log(datePickerRef.current, selectorRef.current);
@@ -68,13 +64,6 @@ export function EditExperince({ children, expId }) {
                 .then(async (res) => {
                     console.log(res.data);
                     dispatch(login(res.data))
-                    await axios.get("http://localhost:4000/api/v1/users/get-exprience")
-                        .then((res) => {
-                            dispatch(addExperience(res.data))
-                        }).catch((err) => {
-                            console.log(err);
-                            seterror("Experience data not fetched successfully in redux store")
-                        })
                 })
                 .catch((err) => {
                     seterror("Experience not added successfully")

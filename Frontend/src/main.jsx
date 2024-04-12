@@ -23,6 +23,7 @@ import LiveClasses from './components/live classes/LiveClasses.jsx'
 import UserProfile from './components/Profile/UserProfile.jsx'
 import Search from './components/Search/Search.jsx'
 import Feed from './components/post/Feed.jsx'
+import Connection from './components/Profile/connection.jsx'
 const router = createBrowserRouter([
   {
     path: '/',
@@ -53,6 +54,20 @@ const router = createBrowserRouter([
         element: <AuthLayout authentication>
           <AppLayout childern={<UserProfile />} />
         </AuthLayout>
+      },
+      {
+        path: "user/:profile",
+        element: <AuthLayout authentication>
+          <AppLayout childern={<Connection />} />
+        </AuthLayout>,
+        children: [
+          {
+            path:"/user/:profile/connection/:followers",
+            element: <AuthLayout authentication>
+              <AppLayout childern={<Connection />} />
+              </AuthLayout>,
+          },
+        ]
       },
       {
         path: "/Search",

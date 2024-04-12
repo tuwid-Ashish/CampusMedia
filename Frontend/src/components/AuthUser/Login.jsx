@@ -4,7 +4,7 @@ import { Input } from "../ui/input";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch,useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
-import { addExperience, login } from "../../Store/AuthSlice.js";
+import { login } from "../../Store/AuthSlice.js";
 import { Button } from "../ui/button";
 import axios from "axios";
 import { Label } from "../ui/label";
@@ -24,13 +24,6 @@ function Loginform() {
        .then((res) => {
         console.log(res);
         dispatch(login(res.data.data));
-          axios.get("http://localhost:4000/api/v1/users/get-exprience", { withCredentials: true }).then((res) => {
-            console.log(res.data);
-            dispatch(addExperience(res.data.data));
-          }).catch((err) => {
-            console.log(err);
-          });
-        
         navigate("/");
       })
       .catch((err) => {

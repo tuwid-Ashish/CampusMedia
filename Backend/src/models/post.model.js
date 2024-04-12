@@ -1,5 +1,6 @@
 import { Schema, model } from 'mongoose';
-
+import  mongoose  from 'mongoose';
+import mongooseaggregate from "mongoose-aggregate-paginate-v2"
 // Define the schema for the post
 const postSchema = new Schema({
     title: {
@@ -28,7 +29,9 @@ const postSchema = new Schema({
      
 },{timestamps:true});
 
-// Create the model for the post
+
 const Post = model('Post', postSchema);
+
+mongoose.plugin(mongooseaggregate)
 
 export default Post;

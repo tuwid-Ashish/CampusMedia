@@ -1,5 +1,5 @@
-import React from 'react'
-import { useSelector } from 'react-redux';
+import React, { useState } from 'react'
+import { useSelector,useDispatch } from 'react-redux';
 import { Button } from "../ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { EditDialog}  from "./EditProfile";
@@ -23,33 +23,36 @@ import {
 } from "../ui/card";
 import { Separator } from "../ui/separator";
 import { EditExperince } from './Experience';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { Pen } from 'lucide-react';
-import { addExperience } from '@/Store/AuthSlice';
+import { addprofile } from '@/Store/AuthSlice';
 import { useEffect } from 'react';
 import axios from 'axios';
 function UserProfile() {
     const userdata = useSelector((state) => state.Auth.user);
      const location = useLocation().pathname.replace("/user/","");
+     const dispatch = useDispatch();
      const [profile,setprofile] = React.useState({})
      const navigate = useNavigate();
-
-     useEffect(() => {
-        console.log("this is my user data",userdata.username === location);
+    const userProfile =()=>{
         if(userdata.username === location) return setprofile(userdata)
         axios.get(`http://localhost:4000/api/v1/users/${location}`, { withCredentials: true })  
         .then((res)=>{
             console.log(res.data)
             setprofile(res.data.data)
+            dispatch(addprofile(res.data.data))
         })
         .catch((err)=>console.log(err))
+    }     
+     useEffect(() => {
+        userProfile()
     },[location])
 
    const Togglesub = () => {
-        axios.post(`http://localhost:4000/api/v1/connections/${profile._id}`,{}, {withCredentials:true})
+        axios.post(`http://localhost:4000/api/v1/connection/${profile._id}`,{}, {withCredentials:true})
         .then((res)=>{console.log(res)
             setprofile((profile)=>({...profile,isfollwed:!profile.isfollwed}))
-            // profile.isfollwed = !profile.isfollwed
+            userProfile()
         })
         .catch((err)=>{
             console.log(err)
@@ -61,7 +64,7 @@ function UserProfile() {
     <Card className="border-b-0">
         <CardHeader className="relative  px-0 py-0 z-0 text-left">
             <img
-                src={profile.coverImage||
+                src={profile?.coverImage||
                     "https://w7.pngwing.com/pngs/772/580/png-transparent-taobao-textured-grain-business-cool-science-and-technology-background-textured-grain-business.png"
                 }
                 alt=""
@@ -76,7 +79,7 @@ function UserProfile() {
                 }
             >
                 <AvatarImage
-                    src={profile.avatar ||
+                    src={profile?.avatar ||
                         "https://cdn.icon-icons.com/icons2/3054/PNG/512/account_profile_user_icon_190494.png"
                     }
                 />
@@ -88,14 +91,16 @@ function UserProfile() {
         </CardHeader>
         <CardContent className="pt-3 px-auto">
             <CardTitle className="lg:text-xl text-lg">
-                {profile.fullname}
+                {profile?.fullname}
             </CardTitle>
             <CardDescription className="lg:text-lg text-lg ">
-                {profile.Description}
+                {profile?.Description}
             </CardDescription>
-            <span className='text-base text-muted-foreground'>{`${profile?.followersCount} connections`}</span>
+            <Link to={`/user/${userdata.username}/connection/followers`}>
+            <span className='text-base text-muted-foreground'>{`${profile?.followersCount} followers`}</span>
+            </Link>
          { profile._id !== userdata._id? <div className='flex justify-start py-2 gap-4'>
-                <Button variant="" className="w-fit self-end rounded-full" onClick={Togglesub} childern={""}>{profile.isfollwed?"Connected":"Connections"}</Button>
+                <Button variant="" className="w-fit self-end rounded-full" onClick={Togglesub}>{profile.isfollwed?"followed":"unfollowed"}</Button>
                 <Button variant="outline" size="lg" className="w-fit self-end rounded-full hover:border-primary " childern={""}>messages</Button>
                 <Button variant="outline" size="lg" className="w-fit self-end rounded-full hover:border-primary" childern={""}>more</Button>
             </div>:null}

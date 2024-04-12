@@ -3,51 +3,85 @@ import { ApiError } from "../utils/ApiError.js"
 import ApiResponse from "../utils/ApiResponse.js"
 import { uploadOncloudinary } from "../utils/Cloudinary.js"
 import { asyncHandler } from "../utils/asyncHandler.js";
-
+import {Connections} from "../models/subscription.model.js";
+import mongoose  from "mongoose";
 const getPostsfeed = asyncHandler(async (req, res) => {
-        
-  // const { page = 1, limit = 10, query, sortBy, sortType, userId } = req.query;
-  // const sortOptions = {};
+        // // const { userId } = req.user;
+      
+        // // Get the IDs of the users that the current user is following
+        // const connections = await Connections.find({ follower: req.user?._id });
+        // console.log("my connections",connections);
+        // const followingIds = connections.map(connection => connection.following);
+        // console.log("my following",followingIds);
+        // // Get the posts created by the users that the current user is following
+        // const posts = await Post.find({ author: { $in: followingIds } })
+        //   .sort({ updatedAt: -1, createdAt: -1 }) // Sort by most recently updated or created
+        //   .exec();
 
-  // if (sortBy) {
-  //   sortOptions[sortBy] = sortType == "desc" ? -1 : 1;
-  // }
-
-  // let basequery = {};
-
-  // if (query) {
-  //   basequery.$or = [
-  //     { title: { $regex: query, $options: "i" } },
-  //     { description: { $regex: query, $options: "i" } },
-  //   ];
-  // }
-
-  // try {
-  //   const result = await Video.aggregate([
-  //     {
-  //       $match: {
-  //         ...basequery,
-  //         owner: new mongoose.Types.ObjectId(userId),
-  //       },
-  //     },
-  //     {
-  //       $sort: sortOptions,
-  //     },
-  //     {
-  //       $skip: (page - 1) * limit,
-  //     },
-  //     {
-  //       $limit: parseInt(limit),
-  //     },
-  //   ]);
-
-  //   console.log(result);
-
-  //   return res.status(200).json(new ApiResponse(200, { result }, "Success"));
-  // } catch (e) {
-  //   throw new ApiError(500, e.message);
-  // }
-});
+          const myposts = await Connections.aggregate([
+            {
+                $match:{
+                    follower: new mongoose.Types.ObjectId(req.user._id) 
+                }
+            },
+            {
+                $lookup:{
+                    from:"posts",
+                    localField:"following",
+                    foreignField:"author",
+                    as:"myposts",
+                    pipeline:[
+                        {
+                            $lookup:{
+                                from:"users",
+                                localField:"author",
+                                foreignField:"_id",
+                                as:"author",
+                                pipeline:[
+                                    
+                                    {
+                                        $project:{
+                                            "avatar":1,
+                                            "username":1,
+                                            "fullname":1,
+                                            "Description":1
+                                        }
+                                    }
+                                ]
+                            },
+                            
+                        },
+                        {
+                            $addFields:{
+                              author:{ $first:"$author"}
+                            }
+                          },
+                        
+                    ]
+                }
+            },
+            {
+                $addFields:{
+                    myposts:{$first:"$myposts"}
+                
+                }
+            },
+            {
+            $project:{
+                myposts:1,
+                _id:0,
+            }
+            },
+            {
+                 $sort:{ updatedAt: -1, createdAt: -1 }
+            },
+          ])
+          const filterposts = myposts.filter((post)=>Object.keys(post).length !== 0)
+        res.status(200).json(
+            new ApiResponse(200, filterposts ,"Posts fetched successfully")
+        );
+      });
+         
 
     //TODO: get all videos based on query, sort, pagination
 
@@ -164,7 +198,7 @@ const togglePublishStatus = asyncHandler(async (req, res) => {
 })
 
 export {
-    // getAllPosts,
+    getPostsfeed,
     publishAPost,
     getPostById,
     updatePost,

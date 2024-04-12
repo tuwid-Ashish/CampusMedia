@@ -45,7 +45,7 @@ function ProfileIcon() {
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={()=>navigator(`/user/:${userdata.username}`)}>
+          <DropdownMenuItem onClick={()=>navigator(`/user/${userdata.username}`)}>
             Profile
             <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
           </DropdownMenuItem>

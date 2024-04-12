@@ -1,5 +1,5 @@
 import { Router } from "express";
-import{ deletePost, getPostById, getPostsfeed, publishAPost, updatePost }   from "../controllers/post.controller.js"; 
+import{ deletePost, getPostById, getPostsfeed, publishAPost, updatePost, userposts }   from "../controllers/post.controller.js"; 
 import { AuthTokenverify } from "../middleware/Auth.middleware.js";
 import { upload } from "../middleware/multer.middleware.js";
 const router = Router();
@@ -16,6 +16,7 @@ router.route("/create-post").post(AuthTokenverify, upload.fields([
   ]), publishAPost);
 
 router.route("/get-allPosts").get(AuthTokenverify,getPostsfeed )
+router.route("/my-posts").post(AuthTokenverify,userposts)
 router.route("/get-post").post(AuthTokenverify,getPostById)
 router.route("/delete-post").post(AuthTokenverify,deletePost)
 router.route("/update-post").post(AuthTokenverify,upload.fields([

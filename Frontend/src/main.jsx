@@ -56,7 +56,7 @@ const router = createBrowserRouter([
         </AuthLayout>
       },
       {
-        path: "user/:profile",
+        path: "/user/:profile",
         element: <AuthLayout authentication>
           <AppLayout childern={<Connection />} />
         </AuthLayout>,

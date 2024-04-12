@@ -44,7 +44,7 @@ export function EditExperince({ children, expId }) {
         from: new Date(2023, 0, 20),
         to: addDays(new Date(2023, 0, 20), 20)
     })
-    console.log("fetching exprience array in editexprence", Exprience);
+
     const { register, handleSubmit } = useForm({
         defaultValues: {
             title: userdata.Experience?.at(expId).title || "",

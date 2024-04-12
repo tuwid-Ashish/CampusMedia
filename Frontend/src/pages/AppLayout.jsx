@@ -23,12 +23,32 @@ import {
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { login, logout } from "../Store/AuthSlice";
+import axios from "axios";
 import { useSelector } from "react-redux";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 function AppLayout({ childern}) {
     const status = useSelector((state) => state.Auth.status);
     const userdata = useSelector((state) => state.Auth.user);
     const navigator = useNavigate();
+    const dispatch = useDispatch();
+    useEffect(() => {
+        axios
+       .get("http://localhost:4000/api/v1/users/current-user",{withCredentials:true})
+       .then((res) => {
+         console.log(res);
+         if(res){
+            dispatch(login(res.data.data));
+           }
+           else{
+             dispatch(logout())
+           }
+         })
+         .catch((err) => {
+           console.log(`error while fetching user ${err}`);
+       })
+   }, []);
     const navItem = [
         {
             name: "Home",

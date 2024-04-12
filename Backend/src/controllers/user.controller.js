@@ -130,17 +130,12 @@ const loginUsers = asyncHandler(async (req, res) => {
   }
   const { access_token, refresh_token } = await GenerateToken(userexist._id);
 
-  const loggedinUser = await User.findById(userexist._id).select(
+  const loggedinUser = await User.findById(userexist._id)
+  .select(
     "-password -refreshtoken"
   );
   res
     .status(200)
-    // .header({
-    //   "Access-Control-Allow-Credentials": "true",
-    //  "Access-Control-Allow-Origin": "http://localhost:5173",
-    //  "Access-Control-Allow-Origins": "http://localhost:5173",
-    // "Content-Type": "application/json"
-    // })
     .cookie("refresh_token", refresh_token, options)
     .cookie("access_token", access_token, options)
     .json(

@@ -75,6 +75,44 @@ export const getChatObjectMetadata = (
 }
 
 // A class that provides utility functions for working with local storage
+// A class that provides utility functions for working with cookies storage
+export class CookieStorage {
+  // Get a value from cookie storage by key
+  static get(key) {
+    console.log("isbrowser is null",document.cookie);
+    if (!isBrowser) return
+    const value = document.cookie
+      .split("; ")
+      .find(row => row.startsWith(`${key}=`))
+    if (value) {
+      console.log(value.split("=")[1]);
+      return value.split("=")[1]
+    }
+    return null
+  }
+
+  // Set a value in cookie storage by key
+  static set(key, value) {
+    if (!isBrowser) return
+    document.cookie = `${key}=${value}; path=/`
+  }
+
+  // Remove a value from cookie storage by key
+  static remove(key) {
+    if (!isBrowser) return
+    document.cookie = `${key}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`
+  }
+
+  // Clear all items from cookie storage
+  static clear() {
+    if (!isBrowser) return
+    document.cookie.split(";").forEach(cookie => {
+      document.cookie = cookie
+        .replace(/^ +/, "")
+        .replace(/=.*/, `=;expires=${new Date().toUTCString()};path=/`)
+    })
+  }
+}
 export class LocalStorage {
   // Get a value from local storage by key
   static get(key) {

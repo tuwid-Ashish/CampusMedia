@@ -32,7 +32,7 @@ const MessageItem = ({ message, isOwnMessage, isGroupChatMessage }) => {
         )}
       >
         <img
-          src={message.sender?.avatar?.url}
+          src={message.sender?.avatar}
           className={classNames(
             "h-8 w-8 object-cover rounded-full flex flex-shrink-0",
             isOwnMessage ? "order-2" : "order-1"
@@ -114,7 +114,7 @@ const MessageItem = ({ message, isOwnMessage, isGroupChatMessage }) => {
             {message.attachments?.length > 0 ? (
               <PaperClipIcon className="h-4 w-4 mr-2 " />
             ) : null}
-            {formatDistanceToNow(add(new Date(message.updatedAt), { hours: TIME_ZONE })) }
+            {/* {formatDistanceToNow(add(new Date(message.updatedAt))) } */}
             ago
           </p>
         </div>

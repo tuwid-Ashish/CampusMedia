@@ -5,9 +5,8 @@ import { LocalStorage, CookieStorage } from "../utils"
 
 // Function to establish a socket connection with authorization token
 const getSocket = () => {
-  console.log("this we get in token fn",CookieStorage.get("access_token"));
   const token = CookieStorage.get("acess-token") || LocalStorage.get("access_token") // Retrieve jwt token from local storage or cookie
-  console.log("this we get in token",token);
+ console.log("token", token);
   // Create a socket connection with the provided URI and authentication
   return socketio(import.meta.env.VITE_SOCKET_URI, {
     withCredentials: true,
@@ -32,7 +31,7 @@ const SocketProvider = ({ children }) => {
   useEffect(() => {
     setSocket(getSocket())
   }, [])
-
+  console.log("this is my socket",socket);
   return (
     // Provide the socket instance through context to its children
     <SocketContext.Provider value={{ socket }}>

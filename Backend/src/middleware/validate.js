@@ -1,5 +1,5 @@
 import { validationResult } from "express-validator";
-import { errorHandler } from "../middlewares/error.middlewares.js";
+import { errorHandler } from "./error.middlewares.js";
 import { ApiError } from "../utils/ApiError.js";
 /**
  *
@@ -49,8 +49,6 @@ export { createAGroupChatValidator, updateGroupChatNameValidator };
 
 
 // this is the message validator for the message related routes
-import { body } from "express-validator";
-
 const sendMessageValidator = () => {
   return [
     body("content")

@@ -2,7 +2,8 @@ import cookie from "cookie";
 import jwt from "jsonwebtoken";
 import { Server, Socket } from "socket.io";
 import { AvailableChatEvents, ChatEventEnum } from "../constants.js";
-import { User } from "../models/apps/auth/user.models.js";
+// import { User } from "../models/user.models.js";
+import { User } from "../models/user.model.js";
 import { ApiError } from "../utils/ApiError.js";
 
 /**
@@ -48,23 +49,25 @@ const initializeSocketIO = (io) => {
     try {
       // parse the cookies from the handshake headers (This is only possible if client has `withCredentials: true`)
       const cookies = cookie.parse(socket.handshake.headers?.cookie || "");
-
-      let token = cookies?.accessToken; // get the accessToken
+        console.log("this my parse cookie",cookies);
+      let token = req.cookies?.access_Token; // get the accessToken
+      console.log("token", token);
 
       if (!token) {
         // If there is no access token in cookies. Check inside the handshake auth
-        token = socket.handshake.auth?.token;
+        token = socket.handshake.auth?.token ;
       }
 
       if (!token) {
         // Token is required for the socket to work
+        console.log("Token is missing");
         throw new ApiError(401, "Un-authorized handshake. Token is missing");
       }
 
-      const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET); // decode the token
+      const decodedToken = jwt.verify(token, process.env.JWT_ACCESS_TOKENT_SECRET); // decode the token
 
       const user = await User.findById(decodedToken?._id).select(
-        "-password -refreshToken -emailVerificationToken -emailVerificationExpiry"
+        "-password -refreshToken"
       );
 
       // retrieve the user

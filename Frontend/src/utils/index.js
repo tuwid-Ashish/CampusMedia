@@ -63,15 +63,16 @@ export const getChatObjectMetadata = (
   } else {
     // Case: Individual chat
     // Identify the participant other than the logged-in user.
-    const participant = chat.participants.find(p => p._id !== loggedInUser?._id)
+    const participant = chat.participants.find(p => p._id !== loggedInUser._id);
+    console.log("this is my participant", chat.participants, participant, participant.email);
     // Return metadata specific to individual chats.
     return {
-      avatar: participant?.avatar.url, // Participant's avatar URL.
-      title: participant?.username, // Participant's username serves as the title.
+      avatar: participant?.avatar, // Participant's avatar URL.
+      title: participant?.fullname, // Participant's username serves as the title.
       description: participant?.email, // Email address of the participant.
       lastMessage
     }
-  }
+}
 }
 
 // A class that provides utility functions for working with local storage
@@ -82,8 +83,9 @@ export class CookieStorage {
     console.log("isbrowser is null",document.cookie);
     if (!isBrowser) return
     const value = document.cookie
-      .split("; ")
-      .find(row => row.startsWith(`${key}=`))
+      // .split("; ")
+      // .find(row => row.startsWith(`${key}=`))
+      console.log("my value of cookies",value);
     if (value) {
       console.log(value.split("=")[1]);
       return value.split("=")[1]

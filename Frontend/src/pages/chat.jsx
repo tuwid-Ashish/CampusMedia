@@ -354,9 +354,9 @@ import { useSelector } from "react-redux"
           }}
         />
   
-        <div className="w-full justify-between items-stretch h-screen flex flex-shrink-0">
+        <div className="w-full justify-between items-stretch h-scree flex flex-shrink-0">
           <div className="w-1/3 relative ring-white overflow-y-auto px-4">
-            <div className="z-10 w-full sticky top-0 bg-dark py-4 flex justify-between items-center gap-4">
+            <div className="z-10 w-full sticky top-0  py-4 flex justify-between items-center gap-4">
               <Input
                 placeholder="Search user or group..."
                 value={localSearchQuery}

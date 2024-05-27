@@ -9,6 +9,7 @@ import React, { useState } from "react"
 import { deleteOneOnOneChat } from "../../api"
 import { classNames, getChatObjectMetadata, requestHandler } from "../../utils"
 import GroupChatDetailsModal from "./GroupChatDetailsModal"
+import { useSelector } from "react-redux"
 
 const ChatItem = ({
   chat,
@@ -113,7 +114,7 @@ const ChatItem = ({
                 return (
                   <img
                     key={participant._id}
-                    src={participant.avatar.url}
+                    src={participant.avatar}
                     className={classNames(
                       "w-7 h-7 border-[1px] border-white rounded-full absolute outline outline-4 outline-dark group-hover:outline-secondary",
                       i === 0
@@ -151,7 +152,7 @@ const ChatItem = ({
         </div>
         <div className="flex text-white/50 h-full text-sm flex-col justify-between items-end">
           <small className="mb-2 inline-flex flex-shrink-0 w-max">
-          {formatDistanceToNow(add(new Date(message.updatedAt), { hours: TIME_ZONE })) }
+          {/* {chat && chat.updatedAt ? formatDistanceToNow(add(new Date(chat?.updatedAt)), { includeSeconds: true, addSuffix: true }) : 'No date provided'} */}
           </small>
 
           {/* Unread count will be > 0 when user is on another chat and there is new message in a chat which is not currently active on user's screen */}

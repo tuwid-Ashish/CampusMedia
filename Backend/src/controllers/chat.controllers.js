@@ -5,7 +5,7 @@ import { Chat } from "../models/chat.models.js";
 import { ChatMessage } from "../models/message.models.js";
 import { emitSocketEvent } from "../socket/index.js";
 import { ApiError } from "../utils/ApiError.js";
-import { ApiResponse } from "../utils/ApiResponse.js";
+import  ApiResponse  from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { removeLocalFile } from "../utils/helper.js";
 
@@ -23,15 +23,11 @@ const chatCommonAggregation = () => {
         localField: "participants",
         as: "participants",
         pipeline: [
-          {
-            $project: {
+          { 
+            $project:{
               password: 0,
-              refreshToken: 0,
-              forgotPasswordToken: 0,
-              forgotPasswordExpiry: 0,
-              emailVerificationToken: 0,
-              emailVerificationExpiry: 0,
-            },
+              refeshtoken: 0,
+            }
           },
         ],
       },
@@ -54,9 +50,11 @@ const chatCommonAggregation = () => {
               pipeline: [
                 {
                   $project: {
-                    username: 1,
-                    avatar: 1,
-                    email: 1,
+                    password: 0,
+                    refreshtoken: 0,
+                    // username: 1,
+                    // avatar: 1,
+                    // email: 1,
                   },
                 },
               ],
@@ -110,6 +108,7 @@ const deleteCascadeChatMessages = async (chatId) => {
 };
 
 const searchAvailableUsers = asyncHandler(async (req, res) => {
+  console.log("this function available user called");
   const users = await User.aggregate([
     {
       $match: {
@@ -147,25 +146,73 @@ const createOrGetAOneOnOneChat = asyncHandler(async (req, res) => {
     throw new ApiError(400, "You cannot chat with yourself");
   }
 
-  const chat = await Chat.aggregate([
-    {
-      $match: {
-        isGroupChat: false, // avoid group chats. This controller is responsible for one on one chats
-        // Also, filter chats with participants having receiver and logged in user only
-        $and: [
-          {
-            participants: { $elemMatch: { $eq: req.user._id } },
-          },
-          {
-            participants: {
-              $elemMatch: { $eq: new mongoose.Types.ObjectId(receiverId) },
+  const chat = await Chat.aggregate(
+    [
+      {
+        $match: {
+          isGroupChat: false, // avoid group chats. This controller is responsible for one on one chats
+          // Also, filter chats with participants having receiver and logged in user only
+          $and: [
+            {
+              participants: { $elemMatch: { $eq: req.user._id } },
             },
-          },
-        ],
+            {
+              participants: {
+                $elemMatch: { $eq: new mongoose.Types.ObjectId(receiverId) },
+              },
+            },
+          ],
+        },
       },
-    },
-    ...chatCommonAggregation(),
-  ]);
+      {
+        // lookup for the participants present
+        $lookup: {
+          from: "users",
+          foreignField: "_id",
+          localField: "participants",
+          as: "participants",
+        },
+      },
+      {
+        // lookup for the group chats
+        $lookup: {
+          from: "chatmessages",
+          foreignField: "_id",
+          localField: "lastMessage",
+          as: "lastMessage",
+          pipeline: [
+            {
+              // get details of the sender
+              $lookup: {
+                from: "users",
+                foreignField: "_id",
+                localField: "sender",
+                as: "sender",
+                pipeline: [
+                  {
+                    $project: {
+                      username: 1,
+                      avatar: 1,
+                      email: 1,
+                    },
+                  },
+                ],
+              },
+            },
+            {
+              $addFields: {
+                sender: { $first: "$sender" },
+              },
+            },
+          ],
+        },
+      },
+      {
+        $addFields: {
+          lastMessage: { $first: "$lastMessage" },
+        },
+      },
+    ]);
 
   if (chat.length) {
     // if we find the chat that means user already has created a chat

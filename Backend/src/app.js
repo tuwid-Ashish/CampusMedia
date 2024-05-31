@@ -3,6 +3,8 @@ import cookieParser from "cookie-parser";
 import Cors from "cors"
 import { createServer } from "http";
 import { Server } from "socket.io";
+import { initializeSocketIO } from "./socket/index.js";
+
 const app =  express()
 
 const httpserver = createServer(app)
@@ -15,17 +17,6 @@ const io = new Server(httpserver,{
         }
 
 })
-
-// Add a connection event listener
-io.on('connection', (socket) => {
-        console.log('New client connected');
-        // You can add more socket event listeners here
-      });
-      
-      // Add an error event listener
-      io.on('error', (error) => {
-        console.error('Socket.IO error:', error);
-      });
 
 // console.log("this is my io",io);
 app.set("io",io)  // using set method to mount the `io` instance on the app to avoid usage of `global`
@@ -52,12 +43,11 @@ import PostRouter from "./routes/post.routes.js"
 import ConnectionRouter from "./routes/connection.routes.js"
 import ChatRouter from "./routes/chat.routes.js"
 import MessageRouter from "./routes/message.routes.js"
-import { initializeSocketIO } from "./socket/index.js";
-initializeSocketIO(io);
 app.use("/api/v1/users",UserRouter)
 app.use("/api/v1/posts",PostRouter)
 app.use("/api/v1/connection",ConnectionRouter)
 app.use("/api/v1/chat-app/chats",ChatRouter)
 app.use("/api/v1/chat-app/messages",MessageRouter)
 
+initializeSocketIO(io);
 export { httpserver }

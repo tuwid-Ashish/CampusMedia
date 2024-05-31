@@ -49,8 +49,8 @@ const initializeSocketIO = (io) => {
     try {
       // parse the cookies from the handshake headers (This is only possible if client has `withCredentials: true`)
       const cookies = cookie.parse(socket.handshake.headers?.cookie || "");
-        console.log("this my parse cookie",cookies);
-      let token = req.cookies?.access_Token; // get the accessToken
+        console.log("this my parse cookie", cookies );
+      let token = cookies?.access_Token; // get the accessToken
       console.log("token", token);
 
       if (!token) {
@@ -65,7 +65,7 @@ const initializeSocketIO = (io) => {
       }
 
       const decodedToken = jwt.verify(token, process.env.JWT_ACCESS_TOKENT_SECRET); // decode the token
-
+      console.log("decodedToken", decodedToken);
       const user = await User.findById(decodedToken?._id).select(
         "-password -refreshToken"
       );
@@ -111,8 +111,10 @@ const initializeSocketIO = (io) => {
  * @param {any} payload - Data that should be sent when emitting the event
  * @description Utility function responsible to abstract the logic of socket emission via the io instance
  */
-const emitSocketEvent = (req, roomId, event, payload) => {
+const    emitSocketEvent = (req, roomId, event, payload) => {
+  console.log("this action is able to perform");
   req.app.get("io").in(roomId).emit(event, payload);
+  console.log("this action is able to perform");
 };
 
 export { initializeSocketIO, emitSocketEvent };

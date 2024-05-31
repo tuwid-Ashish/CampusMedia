@@ -97,7 +97,7 @@ import { useSelector } from "react-redux"
         alert
       )
     }
-  
+    console.log("the chat array",chats);  
     const getMessages = async () => {
       // Check if a chat is selected, if not, show an alert
       if (!currentChat.current?._id) return alert("No chat is selected")
@@ -112,7 +112,8 @@ import { useSelector } from "react-redux"
       setUnreadMessages(
         unreadMessages.filter(msg => msg.chat !== currentChat.current?._id)
       )
-  
+  console.log("the unread message count",unreadMessages.length);
+  console.log("the unread message count",currentChat);
       // Make an async request to fetch chat messages for the current chat
       requestHandler(
         // Fetching messages for the current chat
@@ -224,6 +225,7 @@ import { useSelector } from "react-redux"
      */
     const onMessageReceived = message => {
       // Check if the received message belongs to the currently active chat
+      console.log("the chat message we receved",message);
       if (message?.chat !== currentChat.current?._id) {
         // If not, update the list of unread messages
         setUnreadMessages(prev => [message, ...prev])
@@ -354,7 +356,7 @@ import { useSelector } from "react-redux"
           }}
         />
   
-        <div className="w-full justify-between items-stretch h-scree flex flex-shrink-0">
+        <div className="w-full justify-between items-stretch h-[80%] flex flex-shrink-0">
           <div className="w-1/3 relative ring-white overflow-y-auto px-4">
             <div className="z-10 w-full sticky top-0  py-4 flex justify-between items-center gap-4">
               <Input
@@ -421,7 +423,7 @@ import { useSelector } from "react-redux"
           <div className="w-2/3 border-l-[0.1px] border-secondary">
             {currentChat.current && currentChat.current?._id ? (
               <>
-                <div className="p-4 sticky top-0 bg-dark z-20 flex justify-between items-center w-full border-b-[0.1px] border-secondary">
+                <div className=" p-2 sticky top-0 bg-dark z-9 flex justify-between items-center w-full border-b-[0.1px] border-secondary">
                   <div className="flex justify-start items-center w-max gap-3">
                     {currentChat.current.isGroupChat ? (
                       <div className="w-12 relative h-12 flex-shrink-0 flex justify-start items-center flex-nowrap">
@@ -469,10 +471,10 @@ import { useSelector } from "react-redux"
                 </div>
                 <div
                   className={classNames(
-                    "p-8 overflow-y-auto flex flex-col-reverse gap-6 w-full",
+                    "p-4 overflow-y-auto flex flex-col-reverse gap-6 w-full",
                     attachedFiles.length > 0
                       ? "h-[calc(100vh-336px)]"
-                      : "h-[calc(100vh-176px)]"
+                      : "h-[calc(100vh-260px)]"
                   )}
                   id="message-window"
                 >
@@ -526,7 +528,7 @@ import { useSelector } from "react-redux"
                     })}
                   </div>
                 ) : null}
-                <div className="sticky top-full p-4 flex justify-between items-center w-full gap-2 border-t-[0.1px] border-secondary">
+                <div className="sticky top-ful p-4 flex justify-between items-center w-full gap-2 border-t-[0.1px] border-secondary">
                   <input
                     hidden
                     id="attachments"

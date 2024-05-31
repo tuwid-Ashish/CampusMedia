@@ -4,7 +4,7 @@ import {
   PaperClipIcon,
   XMarkIcon,
 } from "@heroicons/react/20/solid";
-import { formatDistanceToNow, add } from 'date-fns';
+import { formatDistanceToNow, add, addHours } from 'date-fns';
 import { useState } from "react"
 import { classNames } from "../../utils"
 
@@ -114,8 +114,7 @@ const MessageItem = ({ message, isOwnMessage, isGroupChatMessage }) => {
             {message.attachments?.length > 0 ? (
               <PaperClipIcon className="h-4 w-4 mr-2 " />
             ) : null}
-            {/* {formatDistanceToNow(add(new Date(message.updatedAt))) } */}
-            ago
+            {formatDistanceToNow(add(new Date(message.updatedAt),'yyyy-MM-dd HH:mm:ss'),{ addSuffix: true }) }
           </p>
         </div>
       </div>

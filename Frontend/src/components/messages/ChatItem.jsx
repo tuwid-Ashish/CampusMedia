@@ -58,7 +58,7 @@ const ChatItem = ({
           "group p-4 my-2 flex justify-between gap-3 items-start cursor-pointer rounded-3xl hover:bg-secondary",
           isActive ? "border-[1px] border-zinc-500 bg-secondary" : "",
           unreadCount > 0
-            ? "border-[1px] border-success bg-success/20 font-bold"
+            ? "border-[1px] border-primary bg-primary/20 font-bold"
             : ""
         )}
       >
@@ -157,7 +157,7 @@ const ChatItem = ({
 
           {/* Unread count will be > 0 when user is on another chat and there is new message in a chat which is not currently active on user's screen */}
           {unreadCount <= 0 ? null : (
-            <span className="bg-success h-2 w-2 aspect-square flex-shrink-0 p-2 text-white text-xs rounded-full inline-flex justify-center items-center">
+            <span className="bg-primary h-2 w-2 aspect-square flex-shrink-0 p-2 text-white text-xs rounded-full inline-flex justify-center items-center">
               {unreadCount > 9 ? "9+" : unreadCount}
             </span>
           )}

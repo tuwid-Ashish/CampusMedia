@@ -138,7 +138,7 @@ const sendMessage = asyncHandler(async (req, res) => {
   if (!receivedMessage) {
     throw new ApiError(500, "Internal server error");
   }
-
+  console.log("recevied message at backend",message);
   // logic to emit socket event about the new message created to the other participants
   chat.participants.forEach((participantObjectId) => {
     // here the chat is the raw instance of the chat in which participants is the array of object ids of users
@@ -147,8 +147,8 @@ const sendMessage = asyncHandler(async (req, res) => {
 
     // emit the receive message event to the other participants with received message as the payload
     emitSocketEvent(
-      req,
-      participantObjectId.toString(),
+     req,
+     participantObjectId.toString(),
       ChatEventEnum.MESSAGE_RECEIVED_EVENT,
       receivedMessage
     );

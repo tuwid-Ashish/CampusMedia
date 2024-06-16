@@ -42,12 +42,15 @@ import UserRouter from "./routes/user.routes.js"
 import PostRouter from "./routes/post.routes.js"
 import ConnectionRouter from "./routes/connection.routes.js"
 import ChatRouter from "./routes/chat.routes.js"
+import CommentRouter from "./routes/comment.routes.js"
 import MessageRouter from "./routes/message.routes.js"
+import LikeRouter from "./routes/like.routes.js"
 app.use("/api/v1/users",UserRouter)
 app.use("/api/v1/posts",PostRouter)
 app.use("/api/v1/connection",ConnectionRouter)
 app.use("/api/v1/chat-app/chats",ChatRouter)
 app.use("/api/v1/chat-app/messages",MessageRouter)
-
+app.use("/api/v1/comments",CommentRouter)
+app.use("/api/v1/likes",LikeRouter)
 initializeSocketIO(io);
 export { httpserver }

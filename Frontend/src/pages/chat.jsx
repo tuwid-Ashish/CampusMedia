@@ -425,7 +425,7 @@ import { useSelector } from "react-redux"
               <>
                 <div className=" p-2 sticky top-0 bg-dark z-9 flex justify-between items-center w-full border-b-[0.1px] border-secondary">
                   <div className="flex justify-start items-center w-max gap-3">
-                    {currentChat.current.isGroupChat ? (
+                    {currentChat.current.isGroupChat ? (  
                       <div className="w-12 relative h-12 flex-shrink-0 flex justify-start items-center flex-nowrap">
                         {currentChat.current.participants
                           .slice(0, 3)

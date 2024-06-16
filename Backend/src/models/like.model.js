@@ -5,7 +5,7 @@ const likeSchema = new Schema({
         type:Schema.Types.ObjectId,
         ref:"Comment"
     },
-        post:{
+    post:{
         type:Schema.Types.ObjectId,
         ref:"Post"
     },

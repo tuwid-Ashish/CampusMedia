@@ -65,7 +65,7 @@ const getPostsfeed = asyncHandler(async (req, res) => {
         },
     ])
     const filterposts = myposts.filter((post) => Object.keys(post).length !== 0)
-    res.status(200).json(
+   return  res.status(200).json(
         new ApiResponse(200, filterposts, "Posts fetched successfully")
     );
 });

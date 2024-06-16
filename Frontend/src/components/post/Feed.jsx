@@ -15,6 +15,7 @@ import { Button } from '../ui/button';
 import AddPost from './AddPost';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Post from './Post';
 function Feed() {
   const userdata = useSelector((state) => state.Auth.user);
   const [posts, setPosts] = useState([])
@@ -23,7 +24,7 @@ function Feed() {
   const navigate = useNavigate()
   console.log(posts);
   const check = posts.map((post) => post.myposts)
-  console.log(check);
+
   useEffect(() => {
     axios.get('http://localhost:4000/api/v1/posts/get-allPosts', { withCredentials: true })
       .then((res) => {
@@ -73,57 +74,7 @@ function Feed() {
         </CardContent>
       </Card>
       {posts && check.map((check, index) => (
-        <Card className="w-full" key={index}>
-          <CardHeader className="flex pl-4 justify-start flex-row gap-2 w-full">
-            <Avatar
-              onClick={() => navigate(`/user/${check.author.username}`)}
-              variant="outline"
-              className={
-                "border my-auto md:size-14 "
-              }
-            >
-              <AvatarImage
-                src={check.author?.avatar ||
-                  "https://cdn.icon-icons.com/icons2/3054/PNG/512/account_profile_user_icon_190494.png"
-                }
-              />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-            <div className='flex flex-col w-fit '>
-              <CardTitle className="text-xl">
-                { check.author?.fullname}
-              </CardTitle>
-              <CardDescription className="text-lg">
-                { check.author?.Description.split(' ').slice(0, 10).join(' ') + '...'}
-              </CardDescription>
-            </div>
-              {/* <Button variant="" className="w-fit self-start rounded-full" onClick={Togglesub}>{profile.isfollwed?"followed":"unfollowed"}</Button> */}
-          </CardHeader>
-          <CardContent className="p-0">
-            <CardTitle className="px-4 text-lg">
-            {isExpanded ? check?.content : check.content?.split(' ').slice(0, 8).join(' ') + '...'}
-            <button onClick={() => setIsExpanded(!isExpanded)} className='text-muted-foreground'>
-                  {isExpanded ? ' Less' : 'More'}
-                </button>
-            </CardTitle>
-            {check.image?.map((img,key) => (
-              <img
-                src={img ||
-                  "https://w7.pngwing.com/pngs/772/580/png-transparent-taobao-textured-grain-business-cool-science-and-technology-background-textured-grain-business.png"
-                }
-                alt=""
-                key={key}
-                className="aspect-[4/2] rounded-lg bg-white"
-              />
-            ))}
-          </CardContent>
-          <CardFooter className="flex flex-row gap-2 items-center justify-between w-full p-4">
-            <Button className="rounded-full">Like</Button>
-            <Button className="rounded-full">Comment</Button>
-            <Button className="rounded-full">Share</Button>
-
-          </CardFooter>
-        </Card>
+        <Post check={check} key={index} />
       ))}
     </div>
   )

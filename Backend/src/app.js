@@ -42,9 +42,9 @@ import UserRouter from "./routes/user.routes.js"
 import PostRouter from "./routes/post.routes.js"
 import ConnectionRouter from "./routes/connection.routes.js"
 import ChatRouter from "./routes/chat.routes.js"
-import CommentRouter from "./routes/comment.routes.js"
+import CommentRouter from "./routes/comments.routes.js"
 import MessageRouter from "./routes/message.routes.js"
-import LikeRouter from "./routes/like.routes.js"
+import LikeRouter from "./routes/likes.routes.js"
 app.use("/api/v1/users",UserRouter)
 app.use("/api/v1/posts",PostRouter)
 app.use("/api/v1/connection",ConnectionRouter)

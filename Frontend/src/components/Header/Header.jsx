@@ -55,16 +55,16 @@ function Header() {
       active: Status,
     },
 
-    {
-      name: "Live classes",
-      Url: "/live-classes",
-      active: Status,
-    },
-    {
-      name: "News",
-      Url: "/academic-news",
-      active: true,
-    },
+    // {
+    //   name: "Live classes",
+    //   Url: "/live-classes",
+    //   active: Status,
+    // },
+    // {
+    //   name: "News",
+    //   Url: "/academic-news",
+    //   active: true,
+    // },
     {
       name: "notifications",
       Url: "/notifications",

@@ -8,7 +8,6 @@ import { Provider } from 'react-redux'
 import { store } from './Store/Store.js'
 import Authpage from './pages/Authpage.jsx'
 import Signupform from './components/AuthUser/Signup.jsx'
-import Loginform from './components/AuthUser/Login.jsx'
 import VerifyEmail from './components/AuthUser/VerifyEmail.jsx'
 import ForgotPassword from './components/AuthUser/ForgotPassword.jsx'
 import ResetPassword from './components/AuthUser/ResetPassword.jsx'
@@ -18,10 +17,8 @@ import AuthLayout from './components/AuthLayout.jsx'
 import { ThemeProvider } from './components/theme/theme-provider.jsx'
 import AppLayout from './pages/AppLayout.jsx'
 import Notifications from './components/Notifications.jsx'
-import LiveClasses from './components/live classes/LiveClasses.jsx'
 import UserProfile from './components/Profile/UserProfile.jsx'
 import Search from './components/Search/Search.jsx'
-import Feed from './components/post/Feed.jsx'
 import Connection from './components/Profile/connection.jsx'
 import { SocketProvider } from './context/SocketContext.jsx'
 import ChatPage from './pages/chat.jsx'
@@ -42,12 +39,6 @@ const router = createBrowserRouter([
         path: "/Notifications",
         element: <AuthLayout authentication>
           <AppLayout childern={<Notifications />} />
-        </AuthLayout>
-      },
-      {
-        path: "/live-classes",
-        element: <AuthLayout authentication>
-          <AppLayout childern={<LiveClasses />} />
         </AuthLayout>
       },
       {

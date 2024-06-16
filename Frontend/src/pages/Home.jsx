@@ -44,19 +44,18 @@ function Home() {
       active: status,
       icon: <MessageSquareTextIcon />,
     },
-
-    {
-      name: "Live",
-      Url: "/live-classes",
-      active: status,
-      icon: <LucideVideo />,
-    },
-    {
-      name: "News",
-      Url: "/academic-news",
-      active: true,
-      icon: <Newspaper />,
-    },
+    // {
+    //   name: "Live",
+    //   Url: "/live-classes",
+    //   active: status,
+    //   icon: <LucideVideo />,
+    // },
+    // {
+    //   name: "News",
+    //   Url: "/academic-news",
+    //   active: true,
+    //   icon: <Newspaper />,
+    // },
     {
       name: "notifications",
       Url: "/notifications",

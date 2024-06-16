@@ -89,9 +89,9 @@ function Post({
 
       {commentBox && (
         <div className='overflow-y-scroll h-60 bg-secondary w-full'>
-
-          <div className=" p-2 sticky top-0 bg-dark z-9 flex justify-between items-center w-full border-b-[0.1px] border-secondary"><div className='flex justify-start items-center w-max gap-3'>
-
+          <div className=" p-2 sticky top-0 bg-dark z-9 flex justify-between items-center w-full border-b-[0.1px] border-secondary">
+            <div className='flex justify-start items-center w-max gap-3'>
+               
           </div>
           </div>
           <div className="sticky top-full p-4 flex justify-between items-center w-full gap-2 border-t-[0.1px] border-secondary">

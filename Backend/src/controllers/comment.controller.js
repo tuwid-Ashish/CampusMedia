@@ -5,6 +5,33 @@ import ApiResponse from "../utils/ApiResponse.js"
 import { asyncHandler } from "../utils/asyncHandler.js"
 import Post from "../models/post.model.js"
 
+const commentMessageCommonAggregation = () => {
+    return [
+      {
+        $lookup: {
+          from: "users",
+          foreignField: "_id",
+          localField: "sender",
+          as: "sender",
+          pipeline: [
+            {
+              $project: {
+                username: 1,
+                avatar: 1,
+                email: 1,
+              },
+            },
+          ],
+        },
+      },
+      {
+        $addFields: {
+          sender: { $first: "$sender" },
+        },
+      },
+    ];
+  };
+
 const getPostComments = asyncHandler(async (req, res) => {
     //TODO: get all comments for a video
     const { PostId } = req.params
@@ -16,10 +43,19 @@ const getPostComments = asyncHandler(async (req, res) => {
         );
     }
     const postComments = await Comment.aggregate([
-        { $match: { post: mongoose.Types.ObjectId(PostId) } },
-        { $sort: { createdAt: -1 } },
-        { $skip: (page - 1) * limit },
-        { $limit: limit },
+        {
+            $match: {
+              post: new mongoose.Types.ObjectId(PostId),
+            },
+          },
+          ...commentMessageCommonAggregation(),
+          { $skip: (page - 1) * limit },
+          { $limit: limit },
+          {
+            $sort: {
+              createdAt: -1,
+            },
+          },
     ]);
     if (!postComments) {
         throw new ApiError(404, "no comments found")

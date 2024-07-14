@@ -3,7 +3,7 @@ import axios from 'axios'
 function Followers() {
     const [followers, setFollowers] = useState([])
     useEffect(() => {
-        axios.get(`${process.env.VITE_SOCKET_URI}/connections/:followingToId/followers`).then((response) => {
+        axios.get(`${process.env.VITE_SERVER_URI}/connections/:followingToId/followers`).then((response) => {
             console.log(response)
         })
         .catch((error) => { console.log(error) })

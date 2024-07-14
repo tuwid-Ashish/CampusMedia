@@ -58,7 +58,7 @@ export function EditExperince({ children, expId }) {
         console.log(datePickerRef.current, selectorRef.current);
         if (!expId) {
             console.log("expId not found");
-            await axios.post(`${process.env.VITE_SOCKET_URI}/users/Add-Exprience`, data, { withCredentials: true })
+            await axios.post(`${process.env.VITE_SERVER_URI}/users/Add-Exprience`, data, { withCredentials: true })
                 .then(async (res) => {
                     console.log(res.data);
                     dispatch(login(res.data))
@@ -73,7 +73,7 @@ export function EditExperince({ children, expId }) {
             navigate(`/user/${userdata.username}`)
         }
 
-        await axios.patch(`${process.env.VITE_SOCKET_URI}/users/update-Exprience`, { ...data, expId })
+        await axios.patch(`${process.env.VITE_SERVER_URI}/users/update-Exprience`, { ...data, expId })
             .then((res) => {
                 dispatch(login(res.data))
             })

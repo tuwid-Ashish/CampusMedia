@@ -1,7 +1,6 @@
 import { ImageUp } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import * as React from "react"
-import { CalendarIcon } from "@radix-ui/react-icons"
 import { add, addDays, format, set } from "date-fns"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
@@ -15,7 +14,6 @@ import {
     Dialog,
     DialogContent,
     DialogDescription,
-    DialogFooter,
     DialogClose,
     DialogHeader,
     DialogTitle,
@@ -60,7 +58,7 @@ export function EditExperince({ children, expId }) {
         console.log(datePickerRef.current, selectorRef.current);
         if (!expId) {
             console.log("expId not found");
-            await axios.post("http://localhost:4000/api/v1/users/Add-Exprience", data, { withCredentials: true })
+            await axios.post(`${process.env.VITE_SOCKET_URI}/users/Add-Exprience`, data, { withCredentials: true })
                 .then(async (res) => {
                     console.log(res.data);
                     dispatch(login(res.data))
@@ -75,7 +73,7 @@ export function EditExperince({ children, expId }) {
             navigate(`/user/${userdata.username}`)
         }
 
-        await axios.patch("http://localhost:4000/api/v1/users/update-Exprience", { ...data, expId })
+        await axios.patch(`${process.env.VITE_SOCKET_URI}/users/update-Exprience`, { ...data, expId })
             .then((res) => {
                 dispatch(login(res.data))
             })

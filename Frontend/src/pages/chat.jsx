@@ -371,7 +371,7 @@ import { useSelector } from "react-redux"
                 + Add chat
               </button>
             </div>
-            {loadingChats ? (
+            {   loadingChats ? (
               <div className="flex justify-center items-center h-[calc(100%-88px)]">
                 <Typing />
               </div>

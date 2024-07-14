@@ -19,7 +19,7 @@ function Loginform() {
   const loginUser = async (data) => {
     axios
       .post(
-        "http://localhost:4000/api/v1/users/login",
+        `${process.env.VITE_SOCKET_URI}/users/login`,
         data, { withCredentials: true })
        .then((res) => {
         console.log(res);

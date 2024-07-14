@@ -13,7 +13,7 @@ function Connection() {
     const navigate = useNavigate()
     console.log(Connection);
      const getFollowers = ()=>{
-      axios.get(`http://localhost:4000/api/v1/connection/${location}/followers`, { withCredentials: true })
+      axios.get(`${process.env.VITE_SOCKET_URI}/connection/${location}/followers`, { withCredentials: true })
       .then((res)=>{
         console.log(res.data.data);
         setConection(res.data.data)
@@ -24,7 +24,7 @@ function Connection() {
     },[])
 
     const getFollowing = ()=>{
-      axios.get(`http://localhost:4000/api/v1/connection/${location}/following`, { withCredentials: true })
+      axios.get(`${process.env.VITE_SOCKET_URI}/connection/${location}/following`, { withCredentials: true })
       .then((res)=>{
         console.log(res.data.data);
         setConection(res.data.data)

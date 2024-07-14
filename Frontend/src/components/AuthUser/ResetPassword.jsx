@@ -33,7 +33,7 @@ function ResetPassword() {
     }
 
     axios
-      .post("http://localhost:4000/api/v1/users/reset-password", {password:data.password, email:user?user.email:localEmail})
+      .post(`${process.env.VITE_SOCKET_URI}/users/reset-password`, {password:data.password, email:user?user.email:localEmail})
       .then((res) => {
         dispatch(login(res.data));
         navigate("/");

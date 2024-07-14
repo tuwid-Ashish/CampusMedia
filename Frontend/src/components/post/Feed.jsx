@@ -26,22 +26,13 @@ function Feed() {
   const check = posts.map((post) => post.myposts)
 
   useEffect(() => {
-    axios.get('http://localhost:4000/api/v1/posts/get-allPosts', { withCredentials: true })
+    axios.get(`${process.env.VITE_SOCKET_URI}/posts/get-allPosts`, { withCredentials: true })
       .then((res) => {
         console.log(res.data);
         setPosts(res.data.data)
       })
   }, [])
 
-  // const Togglesub = () => {
-  //   axios.post(`http://localhost:4000/api/v1/connection/${}`,{}, {withCredentials:true})
-  //   .then((res)=>{console.log(res)
-  //       setprofile((profile)=>!profile)
-  //   })
-  //   .catch((err)=>{
-  //       console.log(err)
-  //   })
-// }
   return (
     <div className='flex justify-center items-center gap-3 flex-col '>
       <Card className="w-full p-2">

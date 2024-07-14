@@ -36,7 +36,7 @@ function VerifyEmail() {
       navigate("/reset-password");
     }
     axios
-      .post("http://localhost:4000/api/v1/users/signup", userdata)
+      .post(`${process.env.VITE_SOCKET_URI}/users/signup`, userdata)
       .then((res) => {
         dispatch(logout());
         console.log(res);
@@ -50,7 +50,7 @@ function VerifyEmail() {
   };
   const sendmail = async () => {
     axios
-      .post("http://localhost:4000/api/v1/users/emailverify", {
+      .post(`${process.env.VITE_SOCKET_URI}/users/emailverify`, {
         email: userdata.email,
         Emailtype: userdata.password ? "verifyEmail" : "forgotPassword",
       })

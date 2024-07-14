@@ -2,16 +2,11 @@ import React, { useState } from 'react'
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
   DialogClose,
   DialogHeader,
-  DialogTitle,
   DialogTrigger,
 } from "../ui/dialog"
 import { useForm } from 'react-hook-form'
-import { Label } from '../ui/label'
-import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import { useRef } from 'react'
 import { Textarea } from '../ui/textarea'
@@ -19,7 +14,6 @@ import {Image} from "lucide-react"
 import {useSelector} from "react-redux"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { CardDescription } from '../ui/card'
-import { set } from 'date-fns'
 import axios from "axios"
 function AddPost({ children }) {
   const { register, handleSubmit } = useForm()
@@ -38,7 +32,7 @@ function AddPost({ children }) {
         formdata.append("description", data.description);
       }
       console.log(data.description)
-      await axios.post("http://localhost:4000/api/v1/posts/create-post", formdata, { withCredentials: true }).then((res) => {
+      await axios.post(`${process.env.VITE_SOCKET_URI}/posts/create-post`, formdata, { withCredentials: true }).then((res) => {
           console.log(res.data);
           
       })

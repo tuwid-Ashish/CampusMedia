@@ -36,7 +36,9 @@ app.use(express.json({limit:"18kb"}))
 app.use(cookieParser())
 app.use(express.static("public"))
 app.use(express.urlencoded())
-
+app.get("/",(req,res)=>{
+    res.send("hello moto")
+})
 // router import
 import UserRouter from "./routes/user.routes.js"
 import PostRouter from "./routes/post.routes.js"

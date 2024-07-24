@@ -17,6 +17,7 @@ function Loginform() {
   const { register, handleSubmit } = useForm();
   const userdata = useSelector((state) => state.Auth.user);
   const loginUser = async (data) => {
+    console.log(`${process.env.VITE_SERVER_URI}/users/login`, process.env.VITE_SERVER_URI);
     axios
       .post(
         `${process.env.VITE_SERVER_URI}/users/login`,

@@ -17,7 +17,7 @@ function Loginform() {
   const { register, handleSubmit } = useForm();
   const userdata = useSelector((state) => state.Auth.user);
   const loginUser = async (data) => {
-    console.log(`${import.meta.env.VITE_SERVER_URI}/users/login`, process.env.VITE_SERVER_URI);
+    console.log(`${import.meta.env.VITE_SERVER_URI}/users/login`, import.meta.env.VITE_SERVER_URI);
     axios
       .post(
         `${import.meta.env.VITE_SERVER_URI}/users/login`,

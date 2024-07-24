@@ -17,7 +17,7 @@ console.log("fetching exprience array",userdata?.email);
 // const Experience = userid.Experience
 useEffect(() => {
      axios
-    .get(`${process.env.VITE_SERVER_URI}/users/current-user`,{withCredentials:true})
+    .get(`${import.meta.env.VITE_SERVER_URI}/users/current-user`,{withCredentials:true})
     .then((res) => {
       console.log(res);
       if(res){

@@ -32,7 +32,7 @@ function AddPost({ children }) {
         formdata.append("description", data.description);
       }
       console.log(data.description)
-      await axios.post(`${process.env.VITE_SERVER_URI}/posts/create-post`, formdata, { withCredentials: true }).then((res) => {
+      await axios.post(`${import.meta.env.VITE_SERVER_URI}/posts/create-post`, formdata, { withCredentials: true }).then((res) => {
           console.log(res.data);
           
       })

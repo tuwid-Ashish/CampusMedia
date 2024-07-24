@@ -26,7 +26,7 @@ function Feed() {
   const check = posts.map((post) => post.myposts)
 
   useEffect(() => {
-    axios.get(`${process.env.VITE_SERVER_URI}/posts/get-allPosts`, { withCredentials: true })
+    axios.get(`${import.meta.env.VITE_SERVER_URI}/posts/get-allPosts`, { withCredentials: true })
       .then((res) => {
         console.log(res.data);
         setPosts(res.data.data)

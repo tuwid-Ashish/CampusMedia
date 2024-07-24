@@ -46,7 +46,7 @@ export function EditDialog() {
         const fd = new FormData();
     
         if(description !==userdata.Description || website !==userdata.website){
-        await axios.post(`${process.env.VITE_SERVER_URI}/users/update-profile`, { fullname, description, website, Branch, Batch }, { withCredentials: true })
+        await axios.post(`${import.meta.env.VITE_SERVER_URI}/users/update-profile`, { fullname, description, website, Branch, Batch }, { withCredentials: true })
             .then((res) => {
                 console.log(res.data);
                 dispatch(login(res.data.data))
@@ -58,7 +58,7 @@ export function EditDialog() {
         }
         if (data.profileImage.length !== 0) {
             fd.append("profileImage", profileImage[0])
-            await axios.patch(`${process.env.VITE_SERVER_URI}/users/avatar`,fd , { withCredentials: true })
+            await axios.patch(`${import.meta.env.VITE_SERVER_URI}/users/avatar`,fd , { withCredentials: true })
                 .then((res) => {
                     console.log(res.data);
                     dispatch(login(res.data.data))
@@ -70,7 +70,7 @@ export function EditDialog() {
         
         if (data.bannerImage.length !== 0) {
             fd.append("bannerImage", bannerImage[0])
-            await axios.patch(`${process.env.VITE_SERVER_URI}/users/coverImage`, fd, { withCredentials: true })
+            await axios.patch(`${import.meta.env.VITE_SERVER_URI}/users/coverImage`, fd, { withCredentials: true })
                   
                 .then((res) => {
                     console.log(res.data);

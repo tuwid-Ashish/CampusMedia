@@ -28,7 +28,7 @@ function ProfileIcon() {
   const dispatch = useDispatch();
   const logoutapp = () => {
     console.log("logout");
-    axios.get("http://localhost:4000/api/v1/users/logout",{withCredentials:true}).then((res) => {
+    axios.get(`${import.meta.VITE_SERVER_URI}/users/logout`,{withCredentials:true}).then((res) => {
       console.log(res);
       dispatch(logout());
       navigator("/login");

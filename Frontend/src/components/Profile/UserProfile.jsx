@@ -44,7 +44,7 @@ function UserProfile() {
              setprofile(userdata)
              userposts(userdata?._id)
         } 
-        axios.get(`${process.env.VITE_SERVER_URI}/users/${location}`, { withCredentials: true })
+        axios.get(`${import.meta.env.VITE_SERVER_URI}/users/${location}`, { withCredentials: true })
           .then((res) => {
             console.log(res.data)
             setprofile(res.data.data)
@@ -53,7 +53,7 @@ function UserProfile() {
           })
           .then((id) => { // The ID is passed here
             console.log("finally")
-            return axios.post(`${process.env.VITE_SERVER_URI}/posts/my-posts`, { UserId: id }, { withCredentials: true })
+            return axios.post(`${import.meta.env.VITE_SERVER_URI}/posts/my-posts`, { UserId: id }, { withCredentials: true })
           })
           .then((res) => {
             console.log(res.data.data)
@@ -66,7 +66,7 @@ function UserProfile() {
 
     const userposts = async(Id) => {
         console.log(profile);
-        await axios.post(`${process.env.VITE_SERVER_URI}/posts/my-posts`,{UserId: Id }, { withCredentials: true })
+        await axios.post(`${import.meta.env.VITE_SERVER_URI}/posts/my-posts`,{UserId: Id }, { withCredentials: true })
         .then((res) => {
             console.log(res.data)
             setMyposts(res.data.data)
@@ -80,7 +80,7 @@ function UserProfile() {
     }, [mylocation.pathname])
 
     const Togglesub = () => {
-        axios.post(`${process.env.VITE_SERVER_URI}/connection/${profile._id}`, {}, { withCredentials: true })
+        axios.post(`${import.meta.env.VITE_SERVER_URI}/connection/${profile._id}`, {}, { withCredentials: true })
             .then((res) => {
                 console.log(res)
                 setprofile((profile) => ({ ...profile, isfollwed: !profile.isfollwed }))
